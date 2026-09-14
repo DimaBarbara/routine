@@ -32,6 +32,7 @@
   /* Серії графіків: перевірено валідатором (CVD, контраст) проти --card у кожній темі. */
   --series-1: #2a78d6;
   --series-2: #eb6834;
+  --series-3: #1baf7a;
 }
 
 .dark {
@@ -57,6 +58,7 @@
   --shadow: 0 1px 2px oklch(0 0 0 / 0.4);
   --series-1: #3987e5;
   --series-2: #d95926;
+  --series-3: #199e70;
 }
 
 @theme inline {
@@ -85,6 +87,7 @@
   --shadow-card: var(--shadow);
   --color-series-1: var(--series-1);
   --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
 }
 
 @layer base {

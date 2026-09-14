@@ -87,7 +87,7 @@ export function AreaChart({
   const step = Math.max(1, Math.ceil(count / 6));
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 pt-3">
       <div
         className="relative w-14 shrink-0 text-right text-[11px] text-muted-foreground tabular-nums"
         style={{ height }}

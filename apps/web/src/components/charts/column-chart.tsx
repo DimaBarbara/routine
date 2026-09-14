@@ -51,7 +51,7 @@ export function ColumnChart({
   const pct = (value: number) => `${(Math.max(0, value) / top) * 100}%`;
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 pt-3">
       {/* Вісь Y */}
       <div
         className="relative w-14 shrink-0 text-right text-[11px] text-muted-foreground tabular-nums"

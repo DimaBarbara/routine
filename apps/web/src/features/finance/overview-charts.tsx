@@ -12,6 +12,7 @@ import { EXPENSE_META } from './meta';
 
 const SERIES_1 = 'var(--series-1)';
 const SERIES_2 = 'var(--series-2)';
+const SERIES_3 = 'var(--series-3)';
 
 function useMoneyFormatters() {
   const locale = useLocale();
@@ -36,9 +37,14 @@ export function IncomeExpenseChart({ months, labels }: Props) {
   const format = useMoneyFormatters();
   const income = months.map((m) => m.incomeFixedMinor + m.incomeUnplannedMinor);
   const expense = months.map((m) => m.expenseMinor);
+  const deposited = months.map((m) => m.depositedMinor);
   const series = [
     { key: 'income', label: t('series.income'), color: SERIES_1, values: income },
     { key: 'expense', label: t('series.expense'), color: SERIES_2, values: expense },
+    // Третя серія — лише коли в періоді є внески на депозити з позначкою «віднімати з доходів».
+    ...(deposited.some((value) => value > 0)
+      ? [{ key: 'deposited', label: t('series.deposited'), color: SERIES_3, values: deposited }]
+      : []),
   ];
 
   return (
@@ -48,11 +54,10 @@ export function IncomeExpenseChart({ months, labels }: Props) {
       legend={series}
       table={
         <DataTable
-          head={[t('charts.month'), t('series.income'), t('series.expense')]}
+          head={[t('charts.month'), ...series.map((s) => s.label)]}
           rows={labels.map((label, i) => [
             label,
-            format.value(income[i] ?? 0),
-            format.value(expense[i] ?? 0),
+            ...series.map((s) => format.value(s.values[i] ?? 0)),
           ])}
         />
       }

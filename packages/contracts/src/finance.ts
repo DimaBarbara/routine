@@ -140,6 +140,8 @@ const depositFields = z.object({
   annualRateBp: percentBpSchema,
   taxRateBp: percentBpSchema,
   capitalization: z.boolean({ error: 'validation.invalid' }),
+  /** Внески зменшують залишок місяця в огляді. */
+  deductFromIncome: z.boolean({ error: 'validation.invalid' }),
   startDate: isoDateSchema,
   termMonths: z
     .number({ error: 'validation.termInvalid' })
@@ -154,6 +156,7 @@ const depositFields = z.object({
 
 export const depositInputSchema = depositFields.extend({
   taxRateBp: depositFields.shape.taxRateBp.default(DEFAULT_DEPOSIT_TAX_BP),
+  deductFromIncome: depositFields.shape.deductFromIncome.default(true),
   initialAmountMinor: nonNegativeAmountSchema,
 });
 export type DepositInput = z.output<typeof depositInputSchema>;
@@ -259,6 +262,7 @@ export interface DepositDto {
   annualRateBp: number;
   taxRateBp: number;
   capitalization: boolean;
+  deductFromIncome: boolean;
   startDate: string;
   termMonths: number | null;
   /** Кінець строку; null — безстроковий. */
@@ -281,6 +285,8 @@ export interface FinanceMonthSummary {
   expenseMinor: number;
   /** Відкладено в готівку мінус взято, у гривні. */
   savedMinor: number;
+  /** Внески на депозити з позначкою «віднімати з доходів», у гривні. */
+  depositedMinor: number;
   expenseByCategory: Partial<Record<ExpenseCategory, number>>;
 }
 

@@ -17,6 +17,7 @@ import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ConfirmAction } from '@/components/ui/confirm-action';
+import { DatePicker } from '@/components/ui/date-picker';
 import { TextField } from '@/components/ui/field';
 import { Modal } from '@/components/ui/modal';
 import { useErrorText } from '@/hooks/use-error-text';
@@ -25,6 +26,7 @@ import { api } from '@/lib/api/client';
 import { compactNumber, formatMoney, formatPercentBp, parseMoney } from '@/lib/money';
 
 import { DepositForm } from './deposit-form';
+import { SectionHeader } from './section-header';
 
 /** Усі підписи дат готує сервер: Intl у Node і браузері розходиться. */
 export interface DepositView {
@@ -53,26 +55,31 @@ export function DepositsSection({ views, ...shared }: Props) {
   const open = views.find((view) => view.deposit.id === openId);
 
   return (
-    <section className="flex flex-col gap-4">
-      <header className="flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">{t('title')}</h2>
-        <Button size="sm" onClick={() => setCreating(true)}>
-          <Plus className="size-4" aria-hidden /> {t('add')}
-        </Button>
-      </header>
+    <section className="flex flex-col gap-5 rounded-2xl border border-border bg-card p-5 shadow-card sm:p-6">
+      <SectionHeader
+        icon={<Landmark className="size-5" aria-hidden />}
+        tone="bg-accent text-accent-foreground"
+        title={t('title')}
+        hint={t('hint')}
+        action={
+          <Button size="sm" onClick={() => setCreating(true)}>
+            <Plus className="size-4" aria-hidden /> {t('add')}
+          </Button>
+        }
+      />
 
       {views.length === 0 ? (
         <p className="rounded-2xl border-2 border-dashed border-border px-6 py-12 text-center text-sm text-muted-foreground">
           {t('empty')}
         </p>
       ) : (
-        <ul className="grid gap-4 md:grid-cols-2">
+        <ul className="grid auto-rows-fr gap-4 md:grid-cols-2 xl:grid-cols-3">
           {views.map(({ deposit, nextTopUpLabel, endLabel }) => (
             <li key={deposit.id}>
               <button
                 type="button"
                 onClick={() => setOpenId(deposit.id)}
-                className="group flex h-full w-full flex-col gap-4 rounded-2xl border border-border bg-card p-5 text-left shadow-card transition hover:border-input focus-visible:outline-2 focus-visible:outline-ring"
+                className="group flex h-full w-full flex-col gap-4 rounded-2xl border border-border bg-background/40 p-5 text-left transition hover:border-input hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-ring"
               >
                 <div className="flex items-start gap-3">
                   <span className="flex size-10 items-center justify-center rounded-xl bg-accent text-accent-foreground">
@@ -111,6 +118,7 @@ export function DepositsSection({ views, ...shared }: Props) {
 
                 <div className="mt-auto flex flex-wrap gap-1.5">
                   <Badge>{deposit.capitalization ? t('capitalization') : t('payout')}</Badge>
+                  {deposit.deductFromIncome && <Badge tone="amber">{t('deducted')}</Badge>}
                   <Badge>{endLabel ? t('endsOn', { date: endLabel }) : t('openEnded')}</Badge>
                   {nextTopUpLabel && (
                     <Badge tone="accent">{t('nextTopUp', { date: nextTopUpLabel })}</Badge>
@@ -373,10 +381,9 @@ function ContributionForm({
         placeholder="0"
         error={errors['amountMinor']}
       />
-      <TextField
+      <DatePicker
         label={t('finance.transactions.date')}
         name="date"
-        type="date"
         min={startDate}
         defaultValue={today > startDate ? today : startDate}
         error={errors['date'] ?? formError ?? undefined}

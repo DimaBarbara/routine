@@ -13,7 +13,9 @@ import { useState } from 'react';
 
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { DatePicker } from '@/components/ui/date-picker';
 import { ChoiceField, SelectField, TextField } from '@/components/ui/field';
+import { SwitchField } from '@/components/ui/switch-field';
 import { useZodForm } from '@/hooks/use-zod-form';
 import { api } from '@/lib/api/client';
 import { moneyInputValue, parseMoney, parsePercentBp } from '@/lib/money';
@@ -42,6 +44,7 @@ export function DepositForm({ deposit, basePath, members, currentUserId, today, 
     annualRateBp: parsePercentBp(data.get('rate')),
     taxRateBp: parsePercentBp(data.get('tax')),
     capitalization: data.get('capitalization') === 'on',
+    deductFromIncome: data.get('deductFromIncome') === 'on',
     startDate: data.get('startDate'),
     termMonths: data.get('term') === 'fixed' ? Number(data.get('termMonths')) : null,
     initialAmountMinor: deposit ? 0 : (parseMoney(data.get('initial')) ?? 0),
@@ -126,10 +129,9 @@ export function DepositForm({ deposit, basePath, members, currentUserId, today, 
       />
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <TextField
+        <DatePicker
           label={t('finance.deposits.form.start')}
           name="startDate"
-          type="date"
           defaultValue={deposit?.startDate ?? today}
           error={errors['startDate']}
         />
@@ -186,6 +188,12 @@ export function DepositForm({ deposit, basePath, members, currentUserId, today, 
           error={errors['topUpDay']}
         />
       </div>
+      <SwitchField
+        label={t('finance.deposits.form.deduct')}
+        hint={t('finance.deposits.form.deductHint')}
+        name="deductFromIncome"
+        defaultChecked={deposit?.deductFromIncome ?? true}
+      />
 
       <SelectField
         label={t('finance.deposits.form.person')}

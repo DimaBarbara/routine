@@ -80,7 +80,7 @@ export default async function SavingsPage({ params }: PageProps<'/s/[spaceId]/fi
   const shared = { basePath: api, currentUserId: user.id, today };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[22rem_1fr] lg:items-start">
+    <div className="flex flex-col gap-6">
       <CashCard
         stash={stash}
         dateLabels={Object.fromEntries(

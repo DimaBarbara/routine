@@ -22,7 +22,10 @@ export class AnalyticsService {
     to: string | undefined,
     months: number,
   ): Promise<FinanceAnalytics> {
-    await this.schedule.materializeIncomes(spaceId);
+    await Promise.all([
+      this.schedule.materializeIncomes(spaceId),
+      this.schedule.materializeTopUps(spaceId),
+    ]);
 
     const lastMonth = to ?? monthOf(this.clock.today());
     const firstMonth = shiftMonth(lastMonth, -(months - 1));
@@ -31,7 +34,7 @@ export class AnalyticsService {
       lte: toDbDate(monthBounds(lastMonth).end),
     };
 
-    const [transactions, cash] = await Promise.all([
+    const [transactions, cash, contributions] = await Promise.all([
       this.prisma.financeTransaction.findMany({
         where: { spaceId, date: range },
         select: {
@@ -47,11 +50,22 @@ export class AnalyticsService {
         where: { spaceId, date: range },
         select: { amountMinor: true, currency: true, date: true },
       }),
+      this.prisma.depositContribution.findMany({
+        where: { date: range, deposit: { spaceId, deductFromIncome: true } },
+        select: { amountMinor: true, date: true, deposit: { select: { currency: true } } },
+      }),
     ]);
 
-    const [transactionsBase, cashBase] = await Promise.all([
+    const [transactionsBase, cashBase, contributionsBase] = await Promise.all([
       this.rates.toBase(transactions.map((t) => ({ ...t, date: fromDbDate(t.date) }))),
       this.rates.toBase(cash.map((c) => ({ ...c, date: fromDbDate(c.date) }))),
+      this.rates.toBase(
+        contributions.map((c) => ({
+          amountMinor: c.amountMinor,
+          currency: c.deposit.currency,
+          date: fromDbDate(c.date),
+        })),
+      ),
     ]);
 
     const summaries = new Map<string, FinanceMonthSummary>();
@@ -62,6 +76,7 @@ export class AnalyticsService {
         incomeUnplannedMinor: 0,
         expenseMinor: 0,
         savedMinor: 0,
+        depositedMinor: 0,
         expenseByCategory: {},
       });
     }
@@ -92,6 +107,15 @@ export class AnalyticsService {
         return;
       }
       summaries.get(monthOf(fromDbDate(entry.date)))!.savedMinor += amount;
+    });
+
+    contributions.forEach((contribution, index) => {
+      const amount = contributionsBase[index];
+      if (amount === null || amount === undefined) {
+        incomplete = true;
+        return;
+      }
+      summaries.get(monthOf(fromDbDate(contribution.date)))!.depositedMinor += amount;
     });
 
     return { baseCurrency: BASE_CURRENCY, months: [...summaries.values()], incomplete };

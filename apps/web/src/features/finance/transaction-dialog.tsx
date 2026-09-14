@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { ConfirmAction } from '@/components/ui/confirm-action';
+import { DatePicker } from '@/components/ui/date-picker';
 import { ChoiceField, SelectField, TextField } from '@/components/ui/field';
 import { Modal } from '@/components/ui/modal';
 import { useErrorText } from '@/hooks/use-error-text';
@@ -180,10 +181,9 @@ function TransactionForm({
       )}
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <TextField
+        <DatePicker
           label={t('finance.transactions.date')}
           name="date"
-          type="date"
           defaultValue={transaction?.date ?? today}
           error={errors['date']}
         />

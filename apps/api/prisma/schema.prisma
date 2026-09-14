@@ -355,6 +355,8 @@ model Deposit {
   taxRateBp         Int       @default(2300)
   /// true — відсотки додаються до суми щомісяця; false — виплачуються окремо.
   capitalization    Boolean   @default(true)
+  /// Внески на депозит зменшують залишок місяця (як витрата, але окремим рядком).
+  deductFromIncome  Boolean   @default(true)
   startDate         DateTime  @db.Date
   /// null — безстроковий.
   termMonths        Int?

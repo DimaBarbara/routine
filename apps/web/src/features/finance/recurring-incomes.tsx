@@ -15,6 +15,7 @@ import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ConfirmAction } from '@/components/ui/confirm-action';
+import { DatePicker } from '@/components/ui/date-picker';
 import { SelectField, TextField } from '@/components/ui/field';
 import { Modal } from '@/components/ui/modal';
 import { useErrorText } from '@/hooks/use-error-text';
@@ -223,18 +224,17 @@ function RecurringForm({
           ))}
           <option value={NOBODY}>{t('finance.transactions.nobody')}</option>
         </SelectField>
-        <TextField
+        <DatePicker
           label={t('finance.recurring.start')}
           name="startDate"
-          type="date"
           defaultValue={rule?.startDate ?? today}
           error={errors['startDate']}
         />
-        <TextField
+        <DatePicker
           label={t('finance.recurring.end')}
           name="endDate"
-          type="date"
-          defaultValue={rule?.endDate ?? ''}
+          optional
+          defaultValue={rule?.endDate ?? null}
           error={errors['endDate']}
         />
       </div>

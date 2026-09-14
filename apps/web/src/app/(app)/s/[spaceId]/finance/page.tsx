@@ -77,16 +77,22 @@ export default async function FinanceOverviewPage({
       tone: 'bg-destructive-soft text-destructive',
     },
     {
-      label: t('kpi.balance'),
-      value: money(income - current.expenseMinor, { sign: true }),
-      icon: Wallet,
-      tone: 'bg-accent text-accent-foreground',
-    },
-    {
       label: t('kpi.saved'),
-      value: money(current.savedMinor, { sign: true }),
+      value: money(current.depositedMinor + current.savedMinor),
+      hint: t('kpi.savedHint', {
+        deposits: money(current.depositedMinor),
+        cash: money(current.savedMinor),
+      }),
       icon: PiggyBank,
       tone: 'bg-warning-soft text-warning',
+    },
+    {
+      label: t('kpi.balance'),
+      // Внески на депозити з позначкою «віднімати з доходів» зменшують залишок.
+      value: money(income - current.expenseMinor - current.depositedMinor, { sign: true }),
+      hint: t('kpi.balanceHint'),
+      icon: Wallet,
+      tone: 'bg-accent text-accent-foreground',
     },
   ];
 

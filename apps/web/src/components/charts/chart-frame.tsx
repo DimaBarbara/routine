@@ -49,7 +49,7 @@ export function ChartFrame({ title, subtitle, legend, table, children, className
       </header>
 
       {legend && legend.length > 1 && !asTable && (
-        <ul className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+        <ul className="-mt-1 mb-1 flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-muted-foreground">
           {legend.map((item) => (
             <li key={item.label} className="flex items-center gap-2">
               <span

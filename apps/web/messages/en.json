@@ -302,9 +302,11 @@
       "income": "Income",
       "expense": "Expenses",
       "balance": "Left this month",
-      "saved": "Saved in cash",
+      "saved": "Saved",
       "fixedUnplanned": "fixed {fixed} · unplanned {unplanned}",
-      "delta": "{delta} vs last month"
+      "delta": "{delta} vs last month",
+      "savedHint": "deposits {deposits} · cash {cash}",
+      "balanceHint": "income − expenses − deposits"
     },
     "charts": {
       "incomeExpense": "Income and expenses",
@@ -327,7 +329,8 @@
       "fixed": "Fixed",
       "unplanned": "Unplanned",
       "contributed": "Contributed",
-      "interest": "Interest"
+      "interest": "Interest",
+      "deposited": "To deposits"
     },
     "categories": {
       "FOOD": "Groceries",
@@ -438,7 +441,9 @@
         "topUp": "Monthly top-up",
         "topUpHint": "0 — no top-ups",
         "topUpDay": "Top-up day",
-        "person": "Whose deposit"
+        "person": "Whose deposit",
+        "deduct": "Deduct top-ups from income",
+        "deductHint": "Contributions reduce what’s left this month and show on the income and expenses chart"
       },
       "detail": {
         "projection": "Projection",
@@ -458,7 +463,48 @@
         "edit": "Edit settings",
         "deleteConfirm": "Delete the deposit with all contributions?",
         "deleteContributionConfirm": "Delete this contribution?"
-      }
+      },
+      "hint": "What you have now and what it will grow to",
+      "deducted": "deducted from income"
     }
+  },
+  "calendar": {
+    "m1": "January",
+    "m2": "February",
+    "m3": "March",
+    "m4": "April",
+    "m5": "May",
+    "m6": "June",
+    "m7": "July",
+    "m8": "August",
+    "m9": "September",
+    "m10": "October",
+    "m11": "November",
+    "m12": "December",
+    "g1": "January",
+    "g2": "February",
+    "g3": "March",
+    "g4": "April",
+    "g5": "May",
+    "g6": "June",
+    "g7": "July",
+    "g8": "August",
+    "g9": "September",
+    "g10": "October",
+    "g11": "November",
+    "g12": "December",
+    "w1": "Mo",
+    "w2": "Tu",
+    "w3": "We",
+    "w4": "Th",
+    "w5": "Fr",
+    "w6": "Sa",
+    "w7": "Su",
+    "date": "{month} {day}, {year}",
+    "choose": "Pick a date",
+    "prev": "Previous month",
+    "next": "Next month",
+    "today": "Today",
+    "clear": "Clear"
   }
 }

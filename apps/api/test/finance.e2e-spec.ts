@@ -375,7 +375,7 @@ describe('Фінанси (e2e)', () => {
           .expect(201)
       ).body as DepositDto;
 
-      expect(deposit.taxRateBp).toBe(2300);
+      expect(deposit).toMatchObject({ taxRateBp: 2300, deductFromIncome: true });
       expect(deposit.contributions.map((c) => c.kind)).toEqual([
         'INITIAL',
         ...Array.from({ length: 8 }, () => 'SCHEDULED'),
@@ -494,6 +494,32 @@ describe('Фінанси (e2e)', () => {
         })
         .expect(201);
 
+      // Лише депозит із позначкою «віднімати з доходів» потрапляє в depositedMinor.
+      const depositBody = {
+        bank: null,
+        currency: 'UAH',
+        annualRateBp: 1000,
+        capitalization: true,
+        startDate: '2026-09-08',
+        termMonths: null,
+        monthlyTopUpMinor: 0,
+        topUpDay: 8,
+        personId: null,
+      };
+      await outsider
+        .post(`${outsiderBase}/deposits`)
+        .send({ ...depositBody, name: 'Віднімається', initialAmountMinor: 200_000 })
+        .expect(201);
+      await outsider
+        .post(`${outsiderBase}/deposits`)
+        .send({
+          ...depositBody,
+          name: 'Окремо',
+          deductFromIncome: false,
+          initialAmountMinor: 900_000,
+        })
+        .expect(201);
+
       const analytics = (
         await outsider.get(`${outsiderBase}/analytics?to=2026-09&months=3`).expect(200)
       ).body as FinanceAnalytics;
@@ -510,6 +536,7 @@ describe('Фінанси (e2e)', () => {
         incomeUnplannedMinor: 500_000,
         expenseMinor: 150_000 + 41_000,
         savedMinor: 205_000,
+        depositedMinor: 200_000,
         expenseByCategory: { FOOD: 150_000, CAFE: 41_000 },
       });
 

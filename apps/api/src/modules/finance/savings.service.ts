@@ -331,6 +331,7 @@ export class SavingsService {
       annualRateBp: row.annualRateBp,
       taxRateBp: row.taxRateBp,
       capitalization: row.capitalization,
+      deductFromIncome: row.deductFromIncome,
       startDate,
       termMonths: row.termMonths,
       endDate,

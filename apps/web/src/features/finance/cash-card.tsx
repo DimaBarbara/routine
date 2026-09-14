@@ -13,6 +13,7 @@ import { useState } from 'react';
 
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { DatePicker } from '@/components/ui/date-picker';
 import { SelectField, TextField } from '@/components/ui/field';
 import { Modal } from '@/components/ui/modal';
 import { useErrorText } from '@/hooks/use-error-text';
@@ -20,6 +21,8 @@ import { useZodForm } from '@/hooks/use-zod-form';
 import { api } from '@/lib/api/client';
 import { cn } from '@/lib/cn';
 import { formatMoney, parseMoney } from '@/lib/money';
+
+import { SectionHeader } from './section-header';
 
 type Direction = 'IN' | 'OUT';
 
@@ -52,90 +55,95 @@ export function CashCard({ stash, dateLabels, basePath, currentUserId, today }: 
   }
 
   return (
-    <section className="flex flex-col gap-5 rounded-2xl border border-border bg-card p-5 shadow-card">
-      <header className="flex items-start gap-3">
-        <span className="flex size-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-          <Banknote className="size-5" aria-hidden />
-        </span>
-        <div className="flex-1">
-          <h2 className="font-semibold">{t('title')}</h2>
-          <p className="text-sm text-muted-foreground">{t('hint')}</p>
-        </div>
-      </header>
-
-      {stash.balances.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t('empty')}</p>
-      ) : (
-        <div>
-          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            {stash.balances.map((balance) => (
-              <span key={balance.currency} className="text-3xl font-semibold tracking-tight">
-                {formatMoney(locale, balance.amountMinor, balance.currency)}
-              </span>
-            ))}
+    <section className="flex flex-col gap-5 rounded-2xl border border-border bg-card p-5 shadow-card sm:p-6">
+      <SectionHeader
+        icon={<Banknote className="size-5" aria-hidden />}
+        tone="bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+        title={t('title')}
+        hint={t('hint')}
+        action={
+          <div className="flex gap-2">
+            <Button size="sm" onClick={() => setDirection('IN')}>
+              <ArrowDownToLine className="size-4" aria-hidden /> {t('put')}
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => setDirection('OUT')}
+              disabled={stash.balances.length === 0}
+            >
+              <ArrowUpFromLine className="size-4" aria-hidden /> {t('take')}
+            </Button>
           </div>
-          {stash.balances.some((balance) => balance.currency !== 'UAH') && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t('total', { amount: formatMoney(locale, stash.totalBaseMinor, 'UAH') })}
-            </p>
-          )}
-        </div>
-      )}
-
-      <div className="grid grid-cols-2 gap-2">
-        <Button onClick={() => setDirection('IN')}>
-          <ArrowDownToLine className="size-4" aria-hidden /> {t('put')}
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={() => setDirection('OUT')}
-          disabled={stash.balances.length === 0}
-        >
-          <ArrowUpFromLine className="size-4" aria-hidden /> {t('take')}
-        </Button>
-      </div>
+        }
+      />
 
       {error && <Alert tone="error">{error}</Alert>}
 
-      {stash.entries.length > 0 && (
-        <div className="flex flex-col gap-2">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="flex flex-col justify-center rounded-2xl bg-muted/60 p-5">
+          {stash.balances.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t('empty')}</p>
+          ) : (
+            <>
+              <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+                {stash.balances.map((balance) => (
+                  <span key={balance.currency} className="text-3xl font-semibold tracking-tight">
+                    {formatMoney(locale, balance.amountMinor, balance.currency)}
+                  </span>
+                ))}
+              </div>
+              {stash.balances.some((balance) => balance.currency !== 'UAH') && (
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t('total', { amount: formatMoney(locale, stash.totalBaseMinor, 'UAH') })}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+
+        <div className="flex min-w-0 flex-col gap-2">
           <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
             {t('history')}
           </h3>
-          <ul className="flex max-h-72 flex-col overflow-y-auto">
-            {stash.entries.map((entry) => (
-              <li
-                key={entry.id}
-                className="group flex items-center gap-3 border-b border-border py-2 text-sm last:border-0"
-              >
-                <span className="w-24 shrink-0 text-xs text-muted-foreground">
-                  {dateLabels[entry.id]}
-                </span>
-                <span className="min-w-0 flex-1 truncate">
-                  {entry.note ?? entry.person?.name ?? ''}
-                </span>
-                <span
-                  className={cn(
-                    'font-semibold tabular-nums',
-                    entry.amountMinor > 0 && 'text-success',
-                  )}
+          {stash.entries.length === 0 ? (
+            <p className="text-sm text-muted-foreground">—</p>
+          ) : (
+            <ul className="flex max-h-56 flex-col overflow-y-auto">
+              {stash.entries.map((entry) => (
+                <li
+                  key={entry.id}
+                  className="group flex items-center gap-3 border-b border-border py-2 text-sm last:border-0"
                 >
-                  {formatMoney(locale, entry.amountMinor, entry.currency, { sign: true })}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => remove(entry)}
-                  aria-label={tc('delete')}
-                  title={tc('delete')}
-                  className="rounded-md p-1 text-muted-foreground opacity-100 transition hover:bg-destructive-soft hover:text-destructive sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
-                >
-                  <X className="size-3.5" aria-hidden />
-                </button>
-              </li>
-            ))}
-          </ul>
+                  <span className="w-24 shrink-0 text-xs text-muted-foreground">
+                    {dateLabels[entry.id]}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate">
+                    {entry.note ?? entry.person?.name ?? ''}
+                  </span>
+                  <span
+                    className={cn(
+                      'font-semibold tabular-nums',
+                      entry.amountMinor > 0 && 'text-success',
+                    )}
+                  >
+                    {formatMoney(locale, entry.amountMinor, entry.currency, { sign: true })}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => remove(entry)}
+                    aria-label={tc('delete')}
+                    title={tc('delete')}
+                    className="rounded-md p-1 text-muted-foreground transition hover:bg-destructive-soft hover:text-destructive sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+                  >
+                    <X className="size-3.5" aria-hidden />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      )}
+      </div>
 
       <Modal
         open={direction !== null}
@@ -204,10 +212,9 @@ function CashForm({
           ))}
         </SelectField>
       </div>
-      <TextField
+      <DatePicker
         label={t('finance.transactions.date')}
         name="date"
-        type="date"
         defaultValue={today}
         error={errors['date']}
       />
