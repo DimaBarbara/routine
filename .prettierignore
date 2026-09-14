@@ -7,3 +7,4 @@ pnpm-lock.yaml
 *.min.*
 next-env.d.ts
 apps/web/public
+apps/api/src/generated

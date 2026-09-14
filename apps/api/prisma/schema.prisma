@@ -1,0 +1,94 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  OWNER
+  MEMBER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  /// Лише адмін може видавати реєстраційні інвайти (spaceId = null).
+  isAdmin      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberships     Membership[]
+  sessions        Session[]
+  invitesCreated  Invite[]     @relation("InviteCreatedBy")
+  invitesAccepted Invite[]     @relation("InviteAcceptedBy")
+}
+
+/// Серверна сесія: у cookie лежить сирий токен, у БД — лише його sha256.
+model Session {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  userAgent String?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// Простір даних. Усі доменні таблиці модулів посилаються сюди через spaceId.
+model Space {
+  id         String   @id @default(cuid())
+  name       String
+  isPersonal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  memberships Membership[]
+  invites     Invite[]
+}
+
+model Membership {
+  userId   String
+  spaceId  String
+  role     Role     @default(MEMBER)
+  joinedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
+  @@id([userId, spaceId])
+  @@index([spaceId])
+}
+
+/// spaceId = null — реєстраційний інвайт; інакше — запрошення в простір.
+/// Одноразовий: після використання заповнюється acceptedAt.
+model Invite {
+  id           String    @id @default(cuid())
+  tokenHash    String    @unique
+  email        String
+  role         Role      @default(MEMBER)
+  spaceId      String?
+  createdById  String
+  acceptedById String?
+  expiresAt    DateTime
+  acceptedAt   DateTime?
+  revokedAt    DateTime?
+  createdAt    DateTime  @default(now())
+
+  space      Space? @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  createdBy  User   @relation("InviteCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  acceptedBy User?  @relation("InviteAcceptedBy", fields: [acceptedById], references: [id], onDelete: SetNull)
+
+  @@index([email])
+  @@index([createdById])
+}
+

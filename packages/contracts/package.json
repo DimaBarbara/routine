@@ -1,0 +1,35 @@
+{
+  "name": "@routine/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch --preserveWatchOutput",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "zod": "4.6.4"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "typescript": "^6.0.2"
+  },
+  "sideEffects": [
+    "./dist/zod-locale.js",
+    "./dist/index.js"
+  ]
+}

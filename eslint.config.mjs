@@ -17,6 +17,7 @@ export default tseslint.config(
       '**/.turbo/**',
       '**/coverage/**',
       '**/next-env.d.ts',
+      '**/src/generated/**',
     ],
   },
 
@@ -67,6 +68,11 @@ export default tseslint.config(
     rules: {
       // App Router only — правило стосується застарілого Pages Router.
       '@next/next/no-html-link-for-pages': 'off',
+      // React 19 коректно працює з async-обробниками подій (onSubmit, onClick).
+      '@typescript-eslint/no-misused-promises': [
+        'error',
+        { checksVoidReturn: { attributes: false } },
+      ],
     },
   },
 

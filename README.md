@@ -14,22 +14,38 @@
 ├── apps/
 │   ├── api/              # NestJS API, глобальний префікс /api
 │   └── web/              # Next.js застосунок
-├── packages/             # місце для спільних пакетів (ui, types, config…)
+├── packages/
+│   └── contracts/        # zod-схеми й типи, спільні для api та web
 ├── eslint.config.mjs     # єдиний flat-config ESLint на весь репозиторій
 ├── tsconfig.base.json    # спільні compilerOptions, які розширюють застосунки
 ├── turbo.json            # граф задач і кешування
+├── docker-compose.yml    # локальний Postgres
 └── .husky/               # pre-commit (lint-staged) + commit-msg (commitlint)
 ```
 
 ## Старт
 
 ```bash
-corepack enable pnpm      # один раз
+corepack enable pnpm                        # один раз
 pnpm install
+docker compose up -d                        # Postgres на localhost:5433
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env
-pnpm dev                  # підніме web і api паралельно
+pnpm --filter @routine/api db:deploy        # застосувати міграції
+pnpm --filter @routine/api db:seed          # створити адміна з ADMIN_* у apps/api/.env
+pnpm dev                                    # web :3000, api :4000
 ```
+
+Відкрий http://localhost:3000 і увійди під адміном. Решта людей потрапляють у застосунок лише через
+**Запрошення**: посилання показується один раз після створення, його треба скопіювати й надіслати.
+
+## Доступ
+
+- Дані належать **простору**; при реєстрації кожен отримує власний особистий простір.
+- Запрошення у простір видає його власник — людина бачить і редагує всі дані цього простору.
+- Запрошення «окремий акаунт» (без простору) видає лише адмін.
+- Сесія — httpOnly-cookie, у БД зберігається лише sha256 токена. Браузер ходить на `/api` того ж
+  домену, а Next проксує запити в Nest, тож CORS і SameSite=None не потрібні.
 
 ## Команди
 
