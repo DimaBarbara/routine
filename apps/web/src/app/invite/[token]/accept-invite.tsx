@@ -22,7 +22,7 @@ export function AcceptInvite({ token, spaceId }: { token: string; spaceId: strin
     setError(null);
     try {
       await api<AcceptInviteResult>('/invites/accept', 'POST', { token });
-      router.replace(`/dashboard?space=${spaceId}`);
+      router.replace(`/s/${spaceId}/wishlists`);
       router.refresh();
     } catch (err) {
       setError(errorText(err));

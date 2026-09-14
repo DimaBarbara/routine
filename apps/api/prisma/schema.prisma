@@ -7,11 +7,15 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // Кожен модуль — у власній схемі Postgres: межі модулів видно прямо в базі.
+  schemas  = ["public", "wishlist"]
 }
 
 enum Role {
   OWNER
   MEMBER
+
+  @@schema("public")
 }
 
 model User {
@@ -24,10 +28,14 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  memberships     Membership[]
-  sessions        Session[]
-  invitesCreated  Invite[]     @relation("InviteCreatedBy")
-  invitesAccepted Invite[]     @relation("InviteAcceptedBy")
+  memberships      Membership[]
+  sessions         Session[]
+  wishlists        Wishlist[]
+  wishReservations WishReservation[]
+  invitesCreated   Invite[]          @relation("InviteCreatedBy")
+  invitesAccepted  Invite[]          @relation("InviteAcceptedBy")
+
+  @@schema("public")
 }
 
 /// Серверна сесія: у cookie лежить сирий токен, у БД — лише його sha256.
@@ -43,6 +51,7 @@ model Session {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@schema("public")
 }
 
 /// Простір даних. Усі доменні таблиці модулів посилаються сюди через spaceId.
@@ -54,6 +63,9 @@ model Space {
 
   memberships Membership[]
   invites     Invite[]
+  wishlists   Wishlist[]
+
+  @@schema("public")
 }
 
 model Membership {
@@ -67,6 +79,7 @@ model Membership {
 
   @@id([userId, spaceId])
   @@index([spaceId])
+  @@schema("public")
 }
 
 /// spaceId = null — реєстраційний інвайт; інакше — запрошення в простір.
@@ -90,5 +103,73 @@ model Invite {
 
   @@index([email])
   @@index([createdById])
+  @@schema("public")
 }
 
+// ─── Модуль вішліста ─────────────────────────────────────────────────────────
+
+enum WishPriority {
+  LOW
+  MEDIUM
+  HIGH
+
+  @@schema("wishlist")
+}
+
+model Wishlist {
+  id          String   @id @default(cuid())
+  spaceId     String
+  /// Для кого список. Лише ця людина не бачить резервацій — інакше зникає сюрприз.
+  ownerId     String
+  title       String
+  description String?
+  /// Токен публічного посилання; null — посилання вимкнене.
+  shareToken  String?  @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  space Space          @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  owner User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  items WishlistItem[]
+
+  @@index([spaceId])
+  @@schema("wishlist")
+}
+
+model WishlistItem {
+  id         String       @id @default(cuid())
+  wishlistId String
+  title      String
+  url        String?
+  imageUrl   String?
+  /// Ціна в мінорних одиницях (копійках). Гроші ніколи не зберігаємо у float.
+  priceMinor Int?
+  currency   String       @default("UAH") @db.Char(3)
+  priority   WishPriority @default(MEDIUM)
+  note       String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  wishlist    Wishlist         @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  reservation WishReservation?
+
+  @@index([wishlistId])
+  @@schema("wishlist")
+}
+
+/// Одна резервація на бажання (унікальний itemId). Або користувач, або гість за посиланням.
+model WishReservation {
+  id             String   @id @default(cuid())
+  itemId         String   @unique
+  userId         String?
+  guestName      String?
+  /// sha256 cookie гостя — щоб гість міг скасувати саме свою резервацію.
+  guestTokenHash String?
+  createdAt      DateTime @default(now())
+
+  item WishlistItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([guestTokenHash])
+  @@schema("wishlist")
+}

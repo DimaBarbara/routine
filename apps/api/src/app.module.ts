@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module.js';
 import { HealthController } from './modules/health/health.controller.js';
 import { InvitesModule } from './modules/invites/invites.module.js';
 import { SpacesModule } from './modules/spaces/spaces.module.js';
+import { WishlistsModule } from './modules/wishlists/wishlists.module.js';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SpacesModule } from './modules/spaces/spaces.module.js';
     AuthModule,
     SpacesModule,
     InvitesModule,
+    WishlistsModule,
   ],
   controllers: [HealthController],
   providers: [{ provide: APP_FILTER, useClass: HttpExceptionFilter }],

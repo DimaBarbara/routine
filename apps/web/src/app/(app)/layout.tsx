@@ -20,8 +20,15 @@ export default async function AppLayout({ children }: LayoutProps<'/'>) {
             routine
           </Link>
           <nav className="flex gap-1">
-            <NavLink href="/dashboard">{t('dashboard')}</NavLink>
-            <NavLink href="/invites">{t('invites')}</NavLink>
+            <NavLink href="/dashboard" segment="dashboard">
+              {t('dashboard')}
+            </NavLink>
+            <NavLink href="/wishlists" segment="wishlists">
+              {t('wishlists')}
+            </NavLink>
+            <NavLink href="/invites" segment="invites">
+              {t('invites')}
+            </NavLink>
           </nav>
           <div className="ml-auto flex items-center gap-3">
             <span className="hidden text-sm text-zinc-500 md:inline">{user.name}</span>

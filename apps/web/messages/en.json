@@ -4,7 +4,8 @@
     "login": "Sign in",
     "dashboard": "Dashboard",
     "invites": "Invites",
-    "invite": "Invite"
+    "invite": "Invite",
+    "wishlists": "Wishlists"
   },
   "common": {
     "copy": "Copy",
@@ -13,13 +14,17 @@
     "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
-    "create": "Create"
+    "create": "Create",
+    "back": "Back",
+    "close": "Close",
+    "confirmDelete": "Yes, delete"
   },
   "nav": {
     "dashboard": "Dashboard",
     "invites": "Invites",
     "logout": "Sign out",
-    "admin": "admin"
+    "admin": "admin",
+    "wishlists": "Wishlists"
   },
   "preferences": {
     "theme": "Theme",
@@ -68,7 +73,9 @@
   "dashboard": {
     "greeting": "Hi, {name} 👋",
     "signedInAs": "Signed in as {email}.",
-    "spaces": "Your spaces"
+    "spaces": "Your spaces",
+    "modules": "Modules",
+    "wishlistsCard": "Wish lists and gift reservations"
   },
   "invites": {
     "title": "Invites",
@@ -100,7 +107,11 @@
     "passwordMax": "At most 128 characters",
     "passwordMismatch": "Passwords don't match",
     "nameMin": "At least 2 characters",
-    "nameMax": "At most 60 characters"
+    "nameMax": "At most 60 characters",
+    "urlInvalid": "Enter a link starting with http:// or https://",
+    "tooLong": "Text is too long",
+    "priceInvalid": "Invalid price",
+    "priceTooHigh": "Price is too high"
   },
   "errors": {
     "VALIDATION_FAILED": "Please check the form",
@@ -126,5 +137,79 @@
     "NOT_FOUND": "Not found",
     "INTERNAL": "Something went wrong, please try again",
     "network": "Server is unavailable, please try later"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "It may have been deleted, or the link is wrong.",
+    "home": "Go home"
+  },
+  "wishlists": {
+    "title": "Wishlists",
+    "space": "Space",
+    "newPlaceholder": "E.g. “Birthday”",
+    "newLabel": "New list",
+    "create": "Create list",
+    "empty": "No lists yet. Create the first one and share it with friends.",
+    "yours": "Your list",
+    "forOwner": "{name}’s list",
+    "items": "{count, plural, one {# wish} other {# wishes}}",
+    "updated": "updated {date}",
+    "allLists": "All lists",
+    "ownerNote": "You can’t see what others have reserved — the surprise stays a surprise.",
+    "addItem": "Add a wish",
+    "emptyItems": "This list is empty. Add the first wish.",
+    "editList": "Edit",
+    "deleteList": "Delete list",
+    "deleteListConfirm": "Delete the list with all its wishes?",
+    "listTitle": "Title",
+    "listDescription": "Description",
+    "listDescriptionPlaceholder": "When the party is, where to bring gifts…",
+    "share": {
+      "title": "Link for friends",
+      "off": "Create a link — anyone with it can view the list and reserve a gift without an account.",
+      "on": "Anyone with this link can view the list and reserve gifts.",
+      "enable": "Create link",
+      "regenerate": "Regenerate",
+      "regenerateHint": "The old link will stop working",
+      "disable": "Disable"
+    },
+    "item": {
+      "newTitle": "New wish",
+      "editTitle": "Edit wish",
+      "title": "What do you want",
+      "titlePlaceholder": "Coffee maker, a book, concert tickets…",
+      "url": "Product link",
+      "imageUrl": "Image link",
+      "price": "Price",
+      "currency": "Currency",
+      "priority": "How much do you want it",
+      "note": "Note",
+      "notePlaceholder": "Colour, size, model…",
+      "open": "Open",
+      "deleteConfirm": "Delete this wish?",
+      "priorities": {
+        "HIGH": "Really want",
+        "MEDIUM": "Want",
+        "LOW": "Would be nice"
+      }
+    },
+    "reservation": {
+      "reserve": "Reserve",
+      "cancel": "Cancel",
+      "yours": "Reserved by you",
+      "reserved": "Reserved",
+      "reservedBy": "Reserved by {name}",
+      "guestName": "Your name",
+      "guestHint": "{owner} won’t see who reserved what."
+    },
+    "shared": {
+      "heading": "{name}’s wishlist",
+      "guestInfo": "Reserve a gift so nobody buys the same one. {name} won’t see who reserved what.",
+      "ownerInfo": "This is your list. Reservations are hidden so the surprise isn’t spoiled.",
+      "unavailableTitle": "List unavailable",
+      "unavailableText": "The link was disabled or regenerated. Ask for the current one.",
+      "empty": "No wishes in this list yet.",
+      "madeWith": "Made with routine"
+    }
   }
 }

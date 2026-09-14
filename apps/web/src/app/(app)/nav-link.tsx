@@ -5,8 +5,15 @@ import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/cn';
 
-export function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
-  const isActive = usePathname().startsWith(href);
+interface Props {
+  href: string;
+  /** Сегмент шляху, за яким пункт активний: /s/<space>/wishlists теж підсвічує «Вішлісти». */
+  segment: string;
+  children: React.ReactNode;
+}
+
+export function NavLink({ href, segment, children }: Props) {
+  const isActive = usePathname().split('/').includes(segment);
   return (
     <Link
       href={href}

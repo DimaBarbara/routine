@@ -41,7 +41,7 @@ describe('Інвайти, простори та спільний лічильн�
 
     const prisma = app.get(PrismaService);
     assertTestDatabase(process.env['DATABASE_URL']);
-    await prisma.$executeRawUnsafe('TRUNCATE "User", "Space" CASCADE');
+    await prisma.$executeRawUnsafe('TRUNCATE "public"."User", "public"."Space" CASCADE');
     await prisma.user.create({
       data: {
         email: ADMIN.email,

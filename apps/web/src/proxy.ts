@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 const SESSION_COOKIE = 'routine_session';
-const PUBLIC_PATHS = ['/login', '/invite'];
+const PUBLIC_PATHS = ['/login', '/invite', '/w'];
 
 /**
  * Швидкий фільтр за наявністю cookie — без запиту в API.
