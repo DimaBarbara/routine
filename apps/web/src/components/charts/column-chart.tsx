@@ -128,7 +128,7 @@ export function ColumnChart({
                     id={tooltipId}
                     role="tooltip"
                     className={cn(
-                      'pointer-events-none absolute bottom-full z-10 mb-2 min-w-40 rounded-xl border border-border bg-card p-3 text-xs shadow-lg',
+                      'pointer-events-none absolute bottom-full z-10 mb-2 w-max max-w-[calc(100vw-2rem)] min-w-44 rounded-xl border border-border bg-card p-3 text-xs whitespace-nowrap shadow-lg',
                       index > categories.length / 2 ? 'right-0' : 'left-0',
                     )}
                   >

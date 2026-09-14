@@ -53,36 +53,45 @@ export default async function FinanceOverviewPage({
       ? Math.round(((current.expenseMinor - previous.expenseMinor) / previous.expenseMinor) * 100)
       : null;
 
-  const tiles = [
+  const tiles: {
+    label: string;
+    value: string;
+    /** Кожен пункт — окремим рядком: в одну лінію суми не влазять у вузьку плитку. */
+    hints?: string[];
+    icon: typeof Plus;
+    tone: string;
+  }[] = [
     {
       label: t('kpi.income'),
       value: money(income),
-      hint: t('kpi.fixedUnplanned', {
-        fixed: money(current.incomeFixedMinor),
-        unplanned: money(current.incomeUnplannedMinor),
-      }),
+      hints: [
+        t('kpi.incomeFixed', { amount: money(current.incomeFixedMinor) }),
+        t('kpi.incomeUnplanned', { amount: money(current.incomeUnplannedMinor) }),
+      ],
       icon: Plus,
       tone: 'bg-success-soft text-success',
     },
     {
       label: t('kpi.expense'),
       value: money(current.expenseMinor),
-      hint:
+      hints:
         expenseDelta === null
           ? undefined
-          : t('kpi.delta', {
-              delta: `${expenseDelta > 0 ? '+' : expenseDelta < 0 ? '−' : ''}${Math.abs(expenseDelta)}%`,
-            }),
+          : [
+              t('kpi.delta', {
+                delta: `${expenseDelta > 0 ? '+' : expenseDelta < 0 ? '−' : ''}${Math.abs(expenseDelta)}%`,
+              }),
+            ],
       icon: Minus,
       tone: 'bg-destructive-soft text-destructive',
     },
     {
       label: t('kpi.saved'),
       value: money(current.depositedMinor + current.savedMinor),
-      hint: t('kpi.savedHint', {
-        deposits: money(current.depositedMinor),
-        cash: money(current.savedMinor),
-      }),
+      hints: [
+        t('kpi.savedDeposits', { amount: money(current.depositedMinor) }),
+        t('kpi.savedCash', { amount: money(current.savedMinor) }),
+      ],
       icon: PiggyBank,
       tone: 'bg-warning-soft text-warning',
     },
@@ -90,7 +99,7 @@ export default async function FinanceOverviewPage({
       label: t('kpi.balance'),
       // Внески на депозити з позначкою «віднімати з доходів» зменшують залишок.
       value: money(income - current.expenseMinor - current.depositedMinor, { sign: true }),
-      hint: t('kpi.balanceHint'),
+      hints: [t('kpi.balanceHint')],
       icon: Wallet,
       tone: 'bg-accent text-accent-foreground',
     },
@@ -121,8 +130,18 @@ export default async function FinanceOverviewPage({
             </span>
             <div>
               <p className="text-sm text-muted-foreground">{tile.label}</p>
-              <p className="text-2xl font-semibold tracking-tight">{tile.value}</p>
-              {tile.hint && <p className="mt-0.5 text-xs text-muted-foreground">{tile.hint}</p>}
+              <p className="text-xl font-semibold tracking-tight break-words sm:text-2xl">
+                {tile.value}
+              </p>
+              {tile.hints && (
+                <ul className="mt-1 flex flex-col text-xs text-muted-foreground">
+                  {tile.hints.map((hint) => (
+                    <li key={hint} className="break-words">
+                      {hint}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         ))}

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTransition } from 'react';
 
+import { NativeSelect } from '@/components/ui/native-select';
 import { isLocale, LOCALE_COOKIE, locales } from '@/i18n/config';
 import { cn } from '@/lib/cn';
 import { useTheme } from '@/lib/theme/use-theme';
@@ -74,18 +75,19 @@ function LocaleSwitcher() {
   }
 
   return (
-    <select
+    <NativeSelect
+      density="sm"
       aria-label={t('language')}
       value={locale}
       disabled={isPending}
       onChange={(event) => change(event.target.value)}
-      className="h-8 rounded-xl border-0 bg-muted px-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+      className="h-8 rounded-xl border-0 bg-muted pl-2.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
     >
       {locales.map((value) => (
         <option key={value} value={value}>
           {value === 'uk' ? 'UA' : value.toUpperCase()}
         </option>
       ))}
-    </select>
+    </NativeSelect>
   );
 }

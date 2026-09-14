@@ -303,10 +303,12 @@
       "expense": "Витрати",
       "balance": "Залишок місяця",
       "saved": "Відкладено",
-      "fixedUnplanned": "фіксовані {fixed} · позапланові {unplanned}",
       "delta": "{delta} до минулого місяця",
-      "savedHint": "депозити {deposits} · готівка {cash}",
-      "balanceHint": "доходи − витрати − депозити"
+      "balanceHint": "доходи − витрати − депозити",
+      "incomeFixed": "фіксовані {amount}",
+      "incomeUnplanned": "позапланові {amount}",
+      "savedDeposits": "депозити {amount}",
+      "savedCash": "готівка {amount}"
     },
     "charts": {
       "incomeExpense": "Доходи й витрати",

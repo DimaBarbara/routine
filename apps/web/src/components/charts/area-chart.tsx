@@ -181,7 +181,7 @@ export function AreaChart({
                 id={tooltipId}
                 role="tooltip"
                 className={cn(
-                  'pointer-events-none absolute top-2 z-10 min-w-44 rounded-xl border border-border bg-card p-3 text-xs shadow-lg',
+                  'pointer-events-none absolute top-2 z-10 w-max max-w-[calc(100vw-2rem)] min-w-44 rounded-xl border border-border bg-card p-3 text-xs whitespace-nowrap shadow-lg',
                   activeLeft > 50 ? '-translate-x-[calc(100%+12px)]' : 'translate-x-3',
                 )}
                 style={{ left: `${activeLeft}%` }}

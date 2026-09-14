@@ -303,10 +303,12 @@
       "expense": "Expenses",
       "balance": "Left this month",
       "saved": "Saved",
-      "fixedUnplanned": "fixed {fixed} · unplanned {unplanned}",
       "delta": "{delta} vs last month",
-      "savedHint": "deposits {deposits} · cash {cash}",
-      "balanceHint": "income − expenses − deposits"
+      "balanceHint": "income − expenses − deposits",
+      "incomeFixed": "fixed {amount}",
+      "incomeUnplanned": "unplanned {amount}",
+      "savedDeposits": "deposits {amount}",
+      "savedCash": "cash {amount}"
     },
     "charts": {
       "incomeExpense": "Income and expenses",

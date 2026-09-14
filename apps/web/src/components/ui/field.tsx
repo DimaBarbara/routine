@@ -12,6 +12,8 @@ import {
 
 import { cn } from '@/lib/cn';
 
+import { NativeSelect } from './native-select';
+
 const control =
   'w-full rounded-xl border bg-card px-3.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/70 focus:border-ring focus:ring-4 focus:ring-ring/15 disabled:bg-muted disabled:text-muted-foreground';
 
@@ -113,7 +115,7 @@ export function SelectField({
   const id = useId();
   return (
     <FieldShell id={id} label={label} error={error} hint={hint}>
-      <select
+      <NativeSelect
         {...props}
         id={id}
         aria-invalid={error ? true : undefined}
@@ -121,7 +123,7 @@ export function SelectField({
         className={cn(control, 'h-11', border(error), className)}
       >
         {children}
-      </select>
+      </NativeSelect>
     </FieldShell>
   );
 }

@@ -11,6 +11,7 @@ import { LogoutButton } from '@/components/logout-button';
 import { Preferences } from '@/components/preferences';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { NativeSelect } from '@/components/ui/native-select';
 import { cn } from '@/lib/cn';
 import { SPACE_COOKIE } from '@/lib/space';
 
@@ -74,7 +75,7 @@ export function AppNav({ user, spaces, defaultSpaceId, canInvite }: Props) {
             <label className="sr-only" htmlFor="space-switcher">
               {t('space')}
             </label>
-            <select
+            <NativeSelect
               id="space-switcher"
               value={spaceId}
               onChange={(event) => switchSpace(event.target.value)}
@@ -85,7 +86,7 @@ export function AppNav({ user, spaces, defaultSpaceId, canInvite }: Props) {
                   {space.label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
         )}
 

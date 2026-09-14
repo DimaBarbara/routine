@@ -303,10 +303,12 @@
       "expense": "Расходы",
       "balance": "Остаток месяца",
       "saved": "Отложено",
-      "fixedUnplanned": "фиксированные {fixed} · внеплановые {unplanned}",
       "delta": "{delta} к прошлому месяцу",
-      "savedHint": "депозиты {deposits} · наличные {cash}",
-      "balanceHint": "доходы − расходы − депозиты"
+      "balanceHint": "доходы − расходы − депозиты",
+      "incomeFixed": "фиксированные {amount}",
+      "incomeUnplanned": "внеплановые {amount}",
+      "savedDeposits": "депозиты {amount}",
+      "savedCash": "наличные {amount}"
     },
     "charts": {
       "incomeExpense": "Доходы и расходы",
