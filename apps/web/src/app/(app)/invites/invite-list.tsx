@@ -2,7 +2,7 @@
 
 import type { InviteStatus, InviteSummary } from '@routine/contracts';
 import { useRouter } from 'next/navigation';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { Alert } from '@/components/ui/alert';
@@ -18,9 +18,11 @@ const STATUS_TONE: Record<InviteStatus, 'green' | 'amber' | 'red' | 'neutral'> =
   EXPIRED: 'red',
 };
 
-export function InviteList({ invites }: { invites: InviteSummary[] }) {
+/** expiresLabel форматує сервер: Intl у Node і браузері дає різний текст — гідратація впала б. */
+export type InviteRow = InviteSummary & { expiresLabel: string };
+
+export function InviteList({ invites }: { invites: InviteRow[] }) {
   const t = useTranslations('invites');
-  const format = useFormatter();
   const errorText = useErrorText();
   const router = useRouter();
   const [revoking, setRevoking] = useState<string | null>(null);
@@ -51,9 +53,7 @@ export function InviteList({ invites }: { invites: InviteSummary[] }) {
               <p className="truncate text-sm font-medium">{invite.email}</p>
               <p className="text-xs text-zinc-500">
                 {invite.space ? t('toSpace') : t('separateAccount')} ·{' '}
-                {t('until', {
-                  date: format.dateTime(new Date(invite.expiresAt), { dateStyle: 'medium' }),
-                })}
+                {t('until', { date: invite.expiresLabel })}
               </p>
             </div>
             <Badge tone={STATUS_TONE[invite.status]}>{t(`status.${invite.status}`)}</Badge>

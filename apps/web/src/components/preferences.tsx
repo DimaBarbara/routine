@@ -3,19 +3,17 @@
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { useTheme } from 'next-themes';
-import { useSyncExternalStore, useTransition } from 'react';
+import { useTransition } from 'react';
 
 import { isLocale, LOCALE_COOKIE, localeNames, locales } from '@/i18n/config';
 import { cn } from '@/lib/cn';
+import { useTheme } from '@/lib/theme/use-theme';
 
 const THEMES = [
   { value: 'light', icon: Sun },
   { value: 'dark', icon: Moon },
   { value: 'system', icon: Monitor },
 ] as const;
-
-const noopSubscribe = () => () => {};
 
 export function Preferences({ className }: { className?: string }) {
   return (
@@ -29,12 +27,6 @@ export function Preferences({ className }: { className?: string }) {
 function ThemeSwitcher() {
   const t = useTranslations('preferences');
   const { theme, setTheme } = useTheme();
-  // Тема відома лише в браузері — до гідратації не підсвічуємо жодну кнопку.
-  const mounted = useSyncExternalStore(
-    noopSubscribe,
-    () => true,
-    () => false,
-  );
 
   return (
     <div
@@ -43,7 +35,8 @@ function ThemeSwitcher() {
       className="inline-flex rounded-lg border border-zinc-200 p-0.5 dark:border-zinc-800"
     >
       {THEMES.map(({ value, icon: Icon }) => {
-        const active = mounted && theme === value;
+        // До гідратації theme === null: жодна кнопка не підсвічена, розбіжності немає.
+        const active = theme === value;
         return (
           <button
             key={value}

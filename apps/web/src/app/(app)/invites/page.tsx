@@ -1,6 +1,6 @@
 import type { InviteSummary } from '@routine/contracts';
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
+import { getFormatter, getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/card';
 import { serverApi } from '@/lib/api/server';
@@ -15,11 +15,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function InvitesPage() {
   const user = await requireUser();
-  const [invites, t, ts] = await Promise.all([
+  const [invites, t, ts, format] = await Promise.all([
     serverApi<InviteSummary[]>('/invites'),
     getTranslations('invites'),
     getTranslations('spaces'),
+    getFormatter(),
   ]);
+  const rows = invites.map((invite) => ({
+    ...invite,
+    expiresLabel: format.dateTime(new Date(invite.expiresAt), { dateStyle: 'medium' }),
+  }));
 
   const targets = user.spaces
     .filter((space) => space.role === 'OWNER')
@@ -41,7 +46,7 @@ export default async function InvitesPage() {
 
       <Card>
         <h2 className="mb-4 font-semibold">{t('sentTitle')}</h2>
-        <InviteList invites={invites} />
+        <InviteList invites={rows} />
       </Card>
     </div>
   );
