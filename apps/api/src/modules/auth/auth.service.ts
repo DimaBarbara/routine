@@ -1,7 +1,8 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { hash, verify } from '@node-rs/argon2';
 import type { LoginInput, RegisterInput, SessionUser } from '@routine/contracts';
 
+import { AppException } from '../../common/app-exception.js';
 import { PrismaService } from '../../database/prisma.service.js';
 import { InvitesService } from '../invites/invites.service.js';
 import { SpacesService } from '../spaces/spaces.service.js';
@@ -23,7 +24,7 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({ where: { email: email.toLowerCase() } });
     const isValid = await verify(user?.passwordHash ?? (await this.dummyHash), password);
 
-    if (!user || !isValid) throw new UnauthorizedException('Невірна пошта або пароль');
+    if (!user || !isValid) throw AppException.unauthorized('AUTH_INVALID_CREDENTIALS');
 
     const session = await this.sessions.create(user.id, userAgent);
     return { userId: user.id, session };
@@ -37,7 +38,7 @@ export class AuthService {
 
       const existing = await tx.user.findUnique({ where: { email: invite.email } });
       if (existing) {
-        throw new ConflictException('Акаунт із цією поштою вже існує — увійдіть, щоб прийняти');
+        throw AppException.conflict('AUTH_EMAIL_TAKEN');
       }
 
       // Кожен отримує власний простір, навіть якщо його запросили в чужий.
@@ -47,7 +48,7 @@ export class AuthService {
           name,
           passwordHash,
           memberships: {
-            create: { role: 'OWNER', space: { create: { name: 'Особистий', isPersonal: true } } },
+            create: { role: 'OWNER', space: { create: { name: 'Personal', isPersonal: true } } },
           },
         },
       });

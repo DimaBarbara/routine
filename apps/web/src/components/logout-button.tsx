@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export function LogoutButton({ redirectTo = '/login', variant = 'ghost' }: Props) {
+  const t = useTranslations('nav');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +29,7 @@ export function LogoutButton({ redirectTo = '/login', variant = 'ghost' }: Props
 
   return (
     <Button variant={variant} size="sm" onClick={logout} loading={loading}>
-      Вийти
+      {t('logout')}
     </Button>
   );
 }

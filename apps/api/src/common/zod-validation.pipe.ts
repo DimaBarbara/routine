@@ -1,6 +1,7 @@
-import { BadRequestException, type PipeTransform } from '@nestjs/common';
-import type { ApiErrorBody } from '@routine/contracts';
+import { HttpStatus, type PipeTransform } from '@nestjs/common';
 import type { z } from 'zod';
+
+import { AppException } from './app-exception.js';
 
 export class ZodValidationPipe<TSchema extends z.ZodType> implements PipeTransform<
   unknown,
@@ -12,14 +13,10 @@ export class ZodValidationPipe<TSchema extends z.ZodType> implements PipeTransfo
     const result = this.schema.safeParse(value);
     if (result.success) return result.data;
 
-    const body: ApiErrorBody = {
-      statusCode: 400,
-      message: result.error.issues[0]?.message ?? 'Некоректні дані',
-      issues: result.error.issues.map((issue) => ({
-        path: issue.path.join('.'),
-        message: issue.message,
-      })),
-    };
-    throw new BadRequestException(body);
+    throw new AppException(
+      HttpStatus.BAD_REQUEST,
+      'VALIDATION_FAILED',
+      result.error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })),
+    );
   }
 }

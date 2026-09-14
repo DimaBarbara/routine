@@ -1,6 +1,6 @@
-import { BadRequestException } from '@nestjs/common';
 import { type ApiErrorBody, loginSchema } from '@routine/contracts';
 
+import { AppException } from './app-exception.js';
 import { generateToken, hashToken } from './crypto.js';
 import { ZodValidationPipe } from './zod-validation.pipe.js';
 
@@ -12,24 +12,18 @@ describe('ZodValidationPipe', () => {
     expect(pipe.transform(input)).toEqual(input);
   });
 
-  it('кидає 400 з першим повідомленням і списком помилок', () => {
+  it('кидає VALIDATION_FAILED з ключами перекладів для кожного поля', () => {
     try {
       pipe.transform({ email: 'nope' });
       expect.unreachable();
     } catch (error) {
-      expect(error).toBeInstanceOf(BadRequestException);
-      const body = (error as BadRequestException).getResponse() as ApiErrorBody;
-      expect(body.message).toBe('Некоректна пошта');
-      expect(body.issues?.map((issue) => issue.path)).toEqual(['email', 'password']);
-    }
-  });
-
-  it('стандартні повідомлення zod — українською', () => {
-    try {
-      pipe.transform({ email: 'a@b.co' });
-    } catch (error) {
-      const body = (error as BadRequestException).getResponse() as ApiErrorBody;
-      expect(body.message).toMatch(/очікується/);
+      expect(error).toBeInstanceOf(AppException);
+      const body = (error as AppException).getResponse() as ApiErrorBody;
+      expect(body).toMatchObject({ statusCode: 400, code: 'VALIDATION_FAILED' });
+      expect(body.issues).toEqual([
+        { path: 'email', message: 'validation.emailInvalid' },
+        { path: 'password', message: 'validation.required' },
+      ]);
     }
   });
 });

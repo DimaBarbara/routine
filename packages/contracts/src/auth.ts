@@ -1,14 +1,26 @@
 import { z } from 'zod';
 
+/** Повідомлення — ключі перекладів (namespace `validation`), тексти живуть на фронті. */
+export const emailSchema = z.email({ error: 'validation.emailInvalid' }).max(254);
+
+export const passwordSchema = z
+  .string({ error: 'validation.required' })
+  .min(8, { error: 'validation.passwordMin' })
+  .max(128, { error: 'validation.passwordMax' });
+
 export const loginSchema = z.object({
-  email: z.email('Некоректна пошта'),
-  password: z.string().min(1, 'Введіть пароль'),
+  email: emailSchema,
+  password: z.string({ error: 'validation.required' }).min(1, { error: 'validation.required' }),
 });
 export type LoginInput = z.infer<typeof loginSchema>;
 
 export const registerSchema = z.object({
-  token: z.string().min(1, 'Потрібне запрошення'),
-  name: z.string().trim().min(2, 'Мінімум 2 символи').max(60),
-  password: z.string().min(8, 'Мінімум 8 символів').max(128),
+  token: z.string({ error: 'validation.required' }).min(1, { error: 'validation.required' }),
+  name: z
+    .string({ error: 'validation.required' })
+    .trim()
+    .min(2, { error: 'validation.nameMin' })
+    .max(60, { error: 'validation.nameMax' }),
+  password: passwordSchema,
 });
 export type RegisterInput = z.infer<typeof registerSchema>;

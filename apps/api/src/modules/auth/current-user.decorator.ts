@@ -1,10 +1,11 @@
-import { createParamDecorator, type ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
 
+import { AppException } from '../../common/app-exception.js';
 import type { AppRequest, AuthUser } from '../../common/request.js';
 
 export const CurrentUser = createParamDecorator((_: unknown, ctx: ExecutionContext): AuthUser => {
   const request = ctx.switchToHttp().getRequest<AppRequest>();
-  if (!request.user) throw new UnauthorizedException('Потрібно увійти');
+  if (!request.user) throw AppException.unauthorized();
   return request.user;
 });
 

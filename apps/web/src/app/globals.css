@@ -1,11 +1,10 @@
 @import 'tailwindcss';
 
+/* Тема перемикається класом .dark на <html> (next-themes), а не лише системним налаштуванням. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --font-sans: var(--font-inter);
-}
-
-:root {
-  color-scheme: light dark;
 }
 
 body {

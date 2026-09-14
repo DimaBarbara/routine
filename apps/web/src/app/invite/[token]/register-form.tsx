@@ -2,13 +2,22 @@
 
 import { registerSchema, type SessionUser } from '@routine/contracts';
 import { useRouter } from 'next/navigation';
-import { type FormEvent, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { z } from 'zod';
 
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { TextField } from '@/components/ui/field';
+import { PasswordField, TextField } from '@/components/ui/field';
+import { NAVIGATING, useZodForm } from '@/hooks/use-zod-form';
 import { api } from '@/lib/api/client';
-import { ApiError, errorMessage, fieldErrors } from '@/lib/api/error';
+
+/** Серверна схема + підтвердження пароля, яке існує лише у формі. */
+const registerFormSchema = registerSchema
+  .extend({ passwordConfirm: z.string() })
+  .refine((data) => data.password === data.passwordConfirm, {
+    path: ['passwordConfirm'],
+    error: 'validation.passwordMismatch',
+  });
 
 interface Props {
   token: string;
@@ -17,75 +26,54 @@ interface Props {
 }
 
 export function RegisterForm({ token, email, spaceId }: Props) {
+  const t = useTranslations();
   const router = useRouter();
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [formError, setFormError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setFormError(null);
-
-    const form = new FormData(event.currentTarget);
-    if (form.get('password') !== form.get('passwordConfirm')) {
-      return setErrors({ passwordConfirm: 'Паролі не збігаються' });
-    }
-
-    const parsed = registerSchema.safeParse({
-      token,
-      name: form.get('name'),
-      password: form.get('password'),
-    });
-    if (!parsed.success) return setErrors(fieldErrors(parsed.error.issues));
-    setErrors({});
-
-    setLoading(true);
-    try {
-      await api<SessionUser>('/auth/register', 'POST', parsed.data);
-      // Запросили в простір — одразу туди, а не в порожній особистий.
-      router.replace(spaceId ? `/dashboard?space=${spaceId}` : '/dashboard');
-      router.refresh();
-    } catch (error) {
-      if (error instanceof ApiError && error.issues.length) setErrors(fieldErrors(error.issues));
-      else setFormError(errorMessage(error));
-      setLoading(false);
-    }
-  }
+  const { errors, formError, submitting, formProps } = useZodForm(registerFormSchema, (data) => ({
+    ...Object.fromEntries(data),
+    token,
+  }));
 
   return (
-    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
+    <form
+      {...formProps(async ({ name, password }) => {
+        await api<SessionUser>('/auth/register', 'POST', { token, name, password });
+        // Запросили в простір — одразу туди, а не в порожній особистий.
+        router.replace(spaceId ? `/dashboard?space=${spaceId}` : '/dashboard');
+        router.refresh();
+        return NAVIGATING;
+      })}
+      className="flex flex-col gap-4"
+    >
       {formError && <Alert tone="error">{formError}</Alert>}
       <TextField
-        label="Пошта"
+        label={t('fields.email')}
         value={email}
         disabled
         readOnly
-        hint="Запрошення привʼязане до цієї пошти"
+        hint={t('invite.emailHint')}
       />
       <TextField
-        label="Імʼя"
+        label={t('fields.name')}
         name="name"
         autoComplete="given-name"
         autoFocus
         error={errors['name']}
       />
-      <TextField
-        label="Пароль"
+      <PasswordField
+        label={t('fields.password')}
         name="password"
-        type="password"
         autoComplete="new-password"
-        hint="Щонайменше 8 символів"
+        hint={t('invite.passwordHint')}
         error={errors['password']}
       />
-      <TextField
-        label="Пароль ще раз"
+      <PasswordField
+        label={t('fields.passwordConfirm')}
         name="passwordConfirm"
-        type="password"
         autoComplete="new-password"
         error={errors['passwordConfirm']}
       />
-      <Button type="submit" loading={loading} className="mt-2">
-        Створити акаунт
+      <Button type="submit" loading={submitting} className="mt-2">
+        {t('invite.register')}
       </Button>
     </form>
   );

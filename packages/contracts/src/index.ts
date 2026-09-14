@@ -1,5 +1,3 @@
-import './zod-locale.js';
-
 export * from './auth.js';
 export * from './common.js';
 export * from './invites.js';

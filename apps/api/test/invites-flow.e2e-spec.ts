@@ -5,6 +5,7 @@ import { Test } from '@nestjs/testing';
 import { hash } from '@node-rs/argon2';
 import type {
   AcceptInviteResult,
+  ApiErrorBody,
   CreatedInvite,
   InvitePreview,
   SessionUser,
@@ -67,6 +68,11 @@ describe('Інвайти, простори та спільний лічильн�
     await request(app.getHttpServer()).get('/api/auth/me').expect(401);
   });
 
+  it('невідомий маршрут віддає JSON із кодом, а не HTML Express', async () => {
+    const res = await request(app.getHttpServer()).get('/api/definitely-missing').expect(404);
+    expect(res.body).toMatchObject({ statusCode: 404, code: 'NOT_FOUND' });
+  });
+
   it('відхиляє невірний пароль тим самим повідомленням, що й неіснуючу пошту', async () => {
     const wrongPassword = await request(app.getHttpServer())
       .post('/api/auth/login')
@@ -77,9 +83,8 @@ describe('Інвайти, простори та спільний лічильн�
       .send({ email: 'ghost@test.local', password: 'nope-nope' })
       .expect(401);
 
-    expect((wrongPassword.body as { message: string }).message).toBe(
-      (unknownEmail.body as { message: string }).message,
-    );
+    expect((wrongPassword.body as ApiErrorBody).code).toBe('AUTH_INVALID_CREDENTIALS');
+    expect(unknownEmail.body).toEqual(wrongPassword.body);
   });
 
   it('адмін входить і отримує httpOnly-сесію', async () => {

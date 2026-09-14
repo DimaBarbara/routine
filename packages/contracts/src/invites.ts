@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { emailSchema } from './auth.js';
 import { type Role, roleSchema } from './spaces.js';
 
 /**
@@ -7,7 +8,7 @@ import { type Role, roleSchema } from './spaces.js';
  * `spaceId: <id>` — запрошення у простір: видає OWNER цього простору.
  */
 export const createInviteSchema = z.object({
-  email: z.email('Некоректна пошта'),
+  email: emailSchema,
   spaceId: z
     .string()
     .min(1)
@@ -19,7 +20,7 @@ export type CreateInviteInput = z.input<typeof createInviteSchema>;
 export type CreateInviteData = z.output<typeof createInviteSchema>;
 
 export const acceptInviteSchema = z.object({
-  token: z.string().min(1, 'Потрібне запрошення'),
+  token: z.string({ error: 'validation.required' }).min(1, { error: 'validation.required' }),
 });
 export type AcceptInviteInput = z.infer<typeof acceptInviteSchema>;
 

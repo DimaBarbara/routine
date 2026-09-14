@@ -43,7 +43,7 @@ try {
         isAdmin: true,
         passwordHash: await hash(password),
         memberships: {
-          create: { role: 'OWNER', space: { create: { name: 'Особистий', isPersonal: true } } },
+          create: { role: 'OWNER', space: { create: { name: 'Personal', isPersonal: true } } },
         },
       },
     });

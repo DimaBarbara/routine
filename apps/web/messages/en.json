@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "description": "Wishlists, finances and other handy things for your people",
+    "login": "Sign in",
+    "dashboard": "Dashboard",
+    "invites": "Invites",
+    "invite": "Invite"
+  },
+  "common": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "invites": "Invites",
+    "logout": "Sign out",
+    "admin": "admin"
+  },
+  "preferences": {
+    "theme": "Theme",
+    "light": "Light theme",
+    "dark": "Dark theme",
+    "system": "Match system",
+    "language": "Language"
+  },
+  "spaces": {
+    "mine": "My space",
+    "of": "{name}'s space",
+    "members": "{count, plural, one {# member} other {# members}}"
+  },
+  "fields": {
+    "email": "Email",
+    "password": "Password",
+    "passwordConfirm": "Confirm password",
+    "name": "Name",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Registration is invite-only.",
+    "submit": "Sign in"
+  },
+  "invite": {
+    "invalidTitle": "Invalid invite",
+    "invalidText": "This link has expired, been revoked or already used. Ask for a new one.",
+    "toLogin": "Go to sign in",
+    "title": "Invite",
+    "introSpace": "<b>{name}</b> invites you to their space.",
+    "introAccount": "<b>{name}</b> invites you to create an account.",
+    "mismatchTitle": "Invite for a different email",
+    "mismatchText": "You are signed in as <b>{current}</b>, but this invite was sent to <b>{invited}</b>. Sign out and open the link again.",
+    "accept": "Accept invite",
+    "alreadyHaveAccount": "You already have an account.",
+    "toDashboard": "Go to dashboard",
+    "loginToAccept": "An account for <b>{email}</b> already exists — sign in to accept.",
+    "login": "Sign in",
+    "registerTitle": "Create account",
+    "emailHint": "The invite is tied to this email",
+    "passwordHint": "At least 8 characters",
+    "register": "Create account"
+  },
+  "dashboard": {
+    "greeting": "Hi, {name} 👋",
+    "signedInAs": "Signed in as {email}.",
+    "spaces": "Your spaces"
+  },
+  "invites": {
+    "title": "Invites",
+    "description": "Invite someone to your space — they will be able to see and edit your data.",
+    "descriptionAdmin": "Invite someone to your space — they will be able to see and edit your data. Or create a separate account with its own space.",
+    "newTitle": "New invite",
+    "sentTitle": "Sent",
+    "emailPlaceholder": "friend@example.com",
+    "target": "Where",
+    "newAccount": "Separate account (own space)",
+    "created": "Invite for <b>{email}</b> created. Copy the link and send it — we won't show it again.",
+    "empty": "You haven't invited anyone yet.",
+    "toSpace": "To space",
+    "separateAccount": "Separate account",
+    "until": "until {date}",
+    "revoke": "Revoke",
+    "status": {
+      "PENDING": "pending",
+      "ACCEPTED": "accepted",
+      "REVOKED": "revoked",
+      "EXPIRED": "expired"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalid": "Invalid value",
+    "emailInvalid": "Invalid email",
+    "passwordMin": "At least 8 characters",
+    "passwordMax": "At most 128 characters",
+    "passwordMismatch": "Passwords don't match",
+    "nameMin": "At least 2 characters",
+    "nameMax": "At most 60 characters"
+  },
+  "errors": {
+    "VALIDATION_FAILED": "Please check the form",
+    "AUTH_REQUIRED": "Your session has ended — please sign in again",
+    "AUTH_INVALID_CREDENTIALS": "Wrong email or password",
+    "AUTH_EMAIL_TAKEN": "An account with this email already exists — sign in to accept the invite",
+    "SPACE_NOT_FOUND": "Space not found",
+    "INVITE_INVALID": "The invite is invalid, expired or already used",
+    "INVITE_NOT_FOUND": "Invite not found",
+    "INVITE_ALREADY_USED": "The invite has already been used",
+    "INVITE_ADMIN_ONLY": "Only the administrator can create separate accounts",
+    "INVITE_OWNER_ONLY": "Only the space owner can invite people",
+    "INVITE_USER_EXISTS": "A user with this email is already registered",
+    "INVITE_ALREADY_MEMBER": "This person is already in the space",
+    "INVITE_EMAIL_MISMATCH": "The invite was sent to a different email",
+    "INVITE_REGISTRATION_ONLY": "This invite is for a new account, and you already have one",
+    "WISHLIST_NOT_FOUND": "List not found",
+    "WISHLIST_ITEM_NOT_FOUND": "Wish not found",
+    "WISHLIST_OWNER_CANNOT_RESERVE": "You can't reserve gifts from your own list",
+    "WISHLIST_ALREADY_RESERVED": "Someone has already reserved this gift",
+    "WISHLIST_RESERVATION_NOT_FOUND": "Reservation not found",
+    "WISHLIST_GUEST_NAME_REQUIRED": "Enter your name to reserve",
+    "NOT_FOUND": "Not found",
+    "INTERNAL": "Something went wrong, please try again",
+    "network": "Server is unavailable, please try later"
+  }
+}

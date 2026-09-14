@@ -9,3 +9,5 @@ allowBuilds:
   '@prisma/engines': true
   '@prisma/client': true
   esbuild: true
+  '@parcel/watcher': false
+  '@swc/core': false

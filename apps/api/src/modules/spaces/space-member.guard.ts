@@ -1,11 +1,6 @@
-import {
-  type CanActivate,
-  type ExecutionContext,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { type CanActivate, type ExecutionContext, Injectable } from '@nestjs/common';
 
+import { AppException } from '../../common/app-exception.js';
 import type { AppRequest } from '../../common/request.js';
 import { PrismaService } from '../../database/prisma.service.js';
 
@@ -21,13 +16,13 @@ export class SpaceMemberGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<AppRequest>();
     const spaceId = request.params['spaceId'];
 
-    if (!request.user) throw new UnauthorizedException('Потрібно увійти');
-    if (typeof spaceId !== 'string') throw new NotFoundException('Простір не знайдено');
+    if (!request.user) throw AppException.unauthorized();
+    if (typeof spaceId !== 'string') throw AppException.notFound('SPACE_NOT_FOUND');
 
     const membership = await this.prisma.membership.findUnique({
       where: { userId_spaceId: { userId: request.user.id, spaceId } },
     });
-    if (!membership) throw new NotFoundException('Простір не знайдено');
+    if (!membership) throw AppException.notFound('SPACE_NOT_FOUND');
 
     request.membership = { spaceId, role: membership.role };
     return true;

@@ -19,10 +19,12 @@ export async function requireUser(): Promise<SessionUser> {
   return user;
 }
 
-export function spaceLabel(space: SpaceSummary): string {
+type SpacesTranslator = (key: 'mine' | 'of', values?: { name: string }) => string;
+
+export function spaceLabel(space: SpaceSummary, t: SpacesTranslator): string {
   if (!space.isPersonal) return space.name;
-  if (space.role === 'OWNER') return 'Мій простір';
-  return space.ownerName ? `Простір: ${space.ownerName}` : space.name;
+  if (space.role === 'OWNER') return t('mine');
+  return space.ownerName ? t('of', { name: space.ownerName }) : space.name;
 }
 
 /** Лише відносні шляхи — інакше ?next=https://evil.com стає відкритим редіректом. */

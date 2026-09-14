@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 
+import { HttpExceptionFilter } from './common/http-exception.filter.js';
 import { validateEnv } from './config/env.js';
 import { PrismaModule } from './database/prisma.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
@@ -22,5 +24,6 @@ import { SpacesModule } from './modules/spaces/spaces.module.js';
     InvitesModule,
   ],
   controllers: [HealthController],
+  providers: [{ provide: APP_FILTER, useClass: HttpExceptionFilter }],
 })
 export class AppModule {}

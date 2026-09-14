@@ -2,25 +2,26 @@
 
 import type { InviteStatus, InviteSummary } from '@routine/contracts';
 import { useRouter } from 'next/navigation';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useErrorText } from '@/hooks/use-error-text';
 import { api } from '@/lib/api/client';
-import { errorMessage } from '@/lib/api/error';
 
-const STATUS: Record<InviteStatus, { label: string; tone: 'green' | 'amber' | 'red' | 'neutral' }> =
-  {
-    PENDING: { label: 'очікує', tone: 'amber' },
-    ACCEPTED: { label: 'прийнято', tone: 'green' },
-    REVOKED: { label: 'відкликано', tone: 'neutral' },
-    EXPIRED: { label: 'прострочено', tone: 'red' },
-  };
-
-const dateFormat = new Intl.DateTimeFormat('uk-UA', { dateStyle: 'medium' });
+const STATUS_TONE: Record<InviteStatus, 'green' | 'amber' | 'red' | 'neutral'> = {
+  PENDING: 'amber',
+  ACCEPTED: 'green',
+  REVOKED: 'neutral',
+  EXPIRED: 'red',
+};
 
 export function InviteList({ invites }: { invites: InviteSummary[] }) {
+  const t = useTranslations('invites');
+  const format = useFormatter();
+  const errorText = useErrorText();
   const router = useRouter();
   const [revoking, setRevoking] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -32,15 +33,13 @@ export function InviteList({ invites }: { invites: InviteSummary[] }) {
       await api(`/invites/${id}`, 'DELETE');
       router.refresh();
     } catch (err) {
-      setError(errorMessage(err));
+      setError(errorText(err));
     } finally {
       setRevoking(null);
     }
   }
 
-  if (invites.length === 0) {
-    return <p className="text-sm text-zinc-500">Ви ще нікого не запрошували.</p>;
-  }
+  if (invites.length === 0) return <p className="text-sm text-zinc-500">{t('empty')}</p>;
 
   return (
     <div className="flex flex-col gap-3">
@@ -51,11 +50,13 @@ export function InviteList({ invites }: { invites: InviteSummary[] }) {
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{invite.email}</p>
               <p className="text-xs text-zinc-500">
-                {invite.space ? 'У простір' : 'Окремий акаунт'} · до{' '}
-                {dateFormat.format(new Date(invite.expiresAt))}
+                {invite.space ? t('toSpace') : t('separateAccount')} ·{' '}
+                {t('until', {
+                  date: format.dateTime(new Date(invite.expiresAt), { dateStyle: 'medium' }),
+                })}
               </p>
             </div>
-            <Badge tone={STATUS[invite.status].tone}>{STATUS[invite.status].label}</Badge>
+            <Badge tone={STATUS_TONE[invite.status]}>{t(`status.${invite.status}`)}</Badge>
             {invite.status === 'PENDING' && (
               <Button
                 variant="danger"
@@ -63,7 +64,7 @@ export function InviteList({ invites }: { invites: InviteSummary[] }) {
                 loading={revoking === invite.id}
                 onClick={() => revoke(invite.id)}
               >
-                Відкликати
+                {t('revoke')}
               </Button>
             )}
           </li>

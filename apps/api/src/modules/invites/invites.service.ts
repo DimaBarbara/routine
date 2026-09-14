@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type {
   AcceptInviteResult,
@@ -15,6 +9,7 @@ import type {
   InviteSummary,
 } from '@routine/contracts';
 
+import { AppException } from '../../common/app-exception.js';
 import { daysFromNow, generateToken, hashToken } from '../../common/crypto.js';
 import type { AuthUser } from '../../common/request.js';
 import type { Env } from '../../config/env.js';
@@ -22,8 +17,6 @@ import { PrismaService } from '../../database/prisma.service.js';
 import type { Invite, Prisma, Space } from '../../generated/prisma/client.js';
 
 type Db = PrismaService | Prisma.TransactionClient;
-
-const INVALID_INVITE = 'Запрошення недійсне, прострочене або вже використане';
 
 @Injectable()
 export class InvitesService {
@@ -37,23 +30,23 @@ export class InvitesService {
 
     if (input.spaceId === null) {
       if (!user.isAdmin) {
-        throw new ForbiddenException('Реєстраційні запрошення видає лише адміністратор');
+        throw AppException.forbidden('INVITE_ADMIN_ONLY');
       }
       if (await this.prisma.user.findUnique({ where: { email } })) {
-        throw new ConflictException('Користувач із цією поштою вже зареєстрований');
+        throw AppException.conflict('INVITE_USER_EXISTS');
       }
     } else {
       const membership = await this.prisma.membership.findUnique({
         where: { userId_spaceId: { userId: user.id, spaceId: input.spaceId } },
       });
-      if (!membership) throw new NotFoundException('Простір не знайдено');
+      if (!membership) throw AppException.notFound('SPACE_NOT_FOUND');
       if (membership.role !== 'OWNER') {
-        throw new ForbiddenException('Запрошувати може лише власник простору');
+        throw AppException.forbidden('INVITE_OWNER_ONLY');
       }
       const alreadyMember = await this.prisma.membership.findFirst({
         where: { spaceId: input.spaceId, user: { email } },
       });
-      if (alreadyMember) throw new ConflictException('Ця людина вже є в просторі');
+      if (alreadyMember) throw AppException.conflict('INVITE_ALREADY_MEMBER');
     }
 
     const token = generateToken();
@@ -98,8 +91,8 @@ export class InvitesService {
     const invite = await this.prisma.invite.findFirst({
       where: { id: inviteId, createdById: userId },
     });
-    if (!invite) throw new NotFoundException('Запрошення не знайдено');
-    if (invite.acceptedAt) throw new ConflictException('Запрошення вже використане');
+    if (!invite) throw AppException.notFound('INVITE_NOT_FOUND');
+    if (invite.acceptedAt) throw AppException.conflict('INVITE_ALREADY_USED');
 
     const updated = await this.prisma.invite.update({
       where: { id: invite.id },
@@ -132,10 +125,10 @@ export class InvitesService {
       const invite = await this.findPendingByToken(token, tx);
 
       if (invite.email !== user.email) {
-        throw new ForbiddenException(`Запрошення надіслане на ${invite.email}`);
+        throw AppException.forbidden('INVITE_EMAIL_MISMATCH');
       }
       if (!invite.spaceId) {
-        throw new BadRequestException('Це реєстраційне запрошення, а акаунт у вас уже є');
+        throw AppException.badRequest('INVITE_REGISTRATION_ONLY');
       }
 
       await this.consume(invite, user.id, tx);
@@ -146,7 +139,7 @@ export class InvitesService {
   async findPendingByToken(token: string, db: Db): Promise<Invite> {
     const invite = await db.invite.findUnique({ where: { tokenHash: hashToken(token) } });
     if (!invite || this.statusOf(invite) !== 'PENDING') {
-      throw new BadRequestException(INVALID_INVITE);
+      throw AppException.badRequest('INVITE_INVALID');
     }
     return invite;
   }
@@ -160,7 +153,7 @@ export class InvitesService {
       where: { id: invite.id, acceptedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
       data: { acceptedAt: new Date(), acceptedById: userId },
     });
-    if (count !== 1) throw new BadRequestException(INVALID_INVITE);
+    if (count !== 1) throw AppException.badRequest('INVITE_INVALID');
 
     if (invite.spaceId) {
       await db.membership.upsert({

@@ -1,12 +1,8 @@
-import {
-  type CanActivate,
-  type ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { type CanActivate, type ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { Response } from 'express';
 
+import { AppException } from '../../common/app-exception.js';
 import type { AppRequest } from '../../common/request.js';
 import { IS_PUBLIC_KEY } from './public.decorator.js';
 import { SESSION_COOKIE, SessionService } from './session.service.js';
@@ -42,6 +38,6 @@ export class AuthGuard implements CanActivate {
     ]);
     if (isPublic || request.user) return true;
 
-    throw new UnauthorizedException('Потрібно увійти');
+    throw AppException.unauthorized();
   }
 }
