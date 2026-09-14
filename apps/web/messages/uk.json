@@ -5,7 +5,10 @@
     "home": "Головна",
     "invites": "Запрошення",
     "invite": "Запрошення",
-    "wishlist": "Вішліст"
+    "wishlist": "Вішліст",
+    "finance": "Фінанси",
+    "transactions": "Операції",
+    "savings": "Накопичення"
   },
   "common": {
     "copy": "Копіювати",
@@ -28,7 +31,8 @@
     "finances": "Фінанси",
     "logout": "Вийти",
     "admin": "адмін",
-    "space": "Простір"
+    "space": "Простір",
+    "finance": "Фінанси"
   },
   "preferences": {
     "theme": "Тема",
@@ -91,7 +95,11 @@
     "invite": "Запросити",
     "modules": "Модулі",
     "wishlistModule": "Бажання, потреби й подарунки",
-    "financesModule": "Бюджет, витрати й імпорт із Monobank"
+    "financesModule": "Бюджет, витрати й імпорт із Monobank",
+    "financeTitle": "Фінанси цього місяця",
+    "financeExpense": "Витрачено",
+    "financeIncome": "Отримано",
+    "openFinance": "До фінансів"
   },
   "invites": {
     "title": "Запрошення",
@@ -236,7 +244,15 @@
     "urlInvalid": "Потрібне посилання, що починається з http:// або https://",
     "tooLong": "Занадто довгий текст",
     "priceInvalid": "Некоректна ціна",
-    "priceTooHigh": "Занадто велика ціна"
+    "priceTooHigh": "Занадто велика ціна",
+    "amountInvalid": "Введіть суму більше нуля",
+    "amountTooHigh": "Занадто велика сума",
+    "dateInvalid": "Некоректна дата",
+    "dayInvalid": "Число від 1 до 31",
+    "rateInvalid": "Відсоток від 0 до 100",
+    "termInvalid": "Строк — ціла кількість місяців",
+    "endBeforeStart": "Кінець не може бути раніше початку",
+    "dateBeforeStart": "Дата раніше відкриття депозиту"
   },
   "errors": {
     "VALIDATION_FAILED": "Перевірте правильність заповнення",
@@ -263,6 +279,186 @@
     "WISHLIST_INVALID_OWNER": "Бажання можна призначити лише учаснику простору",
     "NOT_FOUND": "Не знайдено",
     "INTERNAL": "Щось пішло не так, спробуйте ще раз",
-    "network": "Сервер недоступний, спробуйте пізніше"
+    "network": "Сервер недоступний, спробуйте пізніше",
+    "FINANCE_NOT_FOUND": "Запис не знайдено — можливо, його видалили",
+    "FINANCE_INVALID_PERSON": "Можна вказати лише учасника простору",
+    "FINANCE_CASH_INSUFFICIENT": "У скарбничці немає стільки в цій валюті"
+  },
+  "finance": {
+    "title": "Фінанси",
+    "tabs": {
+      "overview": "Огляд",
+      "transactions": "Операції",
+      "savings": "Накопичення"
+    },
+    "month": {
+      "prev": "Попередній місяць",
+      "next": "Наступний місяць"
+    },
+    "addExpense": "Витрата",
+    "addIncome": "Дохід",
+    "incomplete": "Для частини валютних сум не вдалося отримати курс НБУ — вони не враховані в підсумках.",
+    "kpi": {
+      "income": "Доходи",
+      "expense": "Витрати",
+      "balance": "Залишок місяця",
+      "saved": "Відкладено готівкою",
+      "fixedUnplanned": "фіксовані {fixed} · позапланові {unplanned}",
+      "delta": "{delta} до минулого місяця"
+    },
+    "charts": {
+      "incomeExpense": "Доходи й витрати",
+      "incomeKinds": "Доходи за типом",
+      "lastMonths": "Останні 6 місяців, у гривні",
+      "categories": "Витрати за категоріями",
+      "categoriesHint": "Порівняно з попереднім місяцем",
+      "noExpenses": "У цьому місяці витрат ще немає.",
+      "showTable": "Таблицею",
+      "showChart": "Графіком",
+      "month": "Місяць",
+      "total": "Разом",
+      "new": "нове",
+      "thousand": "{value} тис.",
+      "million": "{value} млн"
+    },
+    "series": {
+      "income": "Доходи",
+      "expense": "Витрати",
+      "fixed": "Фіксовані",
+      "unplanned": "Позапланові",
+      "contributed": "Внесено",
+      "interest": "Відсотки"
+    },
+    "categories": {
+      "FOOD": "Продукти",
+      "CAFE": "Кафе й ресторани",
+      "ENTERTAINMENT": "Розваги",
+      "TRANSPORT": "Транспорт",
+      "HOME": "Дім",
+      "UTILITIES": "Комуналка",
+      "HEALTH": "Здоровʼя",
+      "BEAUTY": "Краса",
+      "CLOTHES": "Одяг",
+      "SUBSCRIPTIONS": "Підписки",
+      "EDUCATION": "Навчання",
+      "TRAVEL": "Подорожі",
+      "GIFTS": "Подарунки",
+      "OTHER": "Інше"
+    },
+    "incomeKinds": {
+      "FIXED": "Фіксований",
+      "UNPLANNED": "Позаплановий"
+    },
+    "transactions": {
+      "empty": "За цей місяць операцій ще немає.",
+      "recurring": "регулярний",
+      "newExpense": "Нова витрата",
+      "newIncome": "Новий дохід",
+      "editTitle": "Операція",
+      "expense": "Витрата",
+      "income": "Дохід",
+      "amount": "Сума",
+      "currency": "Валюта",
+      "category": "Категорія",
+      "kind": "Тип доходу",
+      "date": "Дата",
+      "person": "Хто",
+      "nobody": "Не вказано",
+      "note": "Нотатка",
+      "notePlaceholderExpense": "На що витратили",
+      "notePlaceholderIncome": "Звідки гроші",
+      "deleteConfirm": "Видалити операцію?",
+      "approx": "≈ {amount}"
+    },
+    "recurring": {
+      "title": "Регулярні доходи",
+      "hint": "Зʼявляються в операціях самі щомісяця — як зарплата.",
+      "add": "Додати",
+      "empty": "Регулярних доходів поки немає.",
+      "formTitle": "Регулярний дохід",
+      "name": "Назва",
+      "namePlaceholder": "Зарплата",
+      "day": "Число місяця",
+      "dayHint": "У коротких місяцях — останній день",
+      "start": "Починаючи з",
+      "end": "До (необовʼязково)",
+      "every": "щомісяця {day}-го",
+      "next": "наступний {date}",
+      "paused": "на паузі",
+      "pause": "Пауза",
+      "resume": "Відновити",
+      "deleteConfirm": "Видалити? Створені операції залишаться."
+    },
+    "cash": {
+      "title": "Готівка",
+      "hint": "Одна скарбничка, будь-які валюти",
+      "empty": "Поки нічого не відкладено.",
+      "total": "Разом ≈ {amount}",
+      "put": "Відкласти",
+      "take": "Взяти",
+      "putTitle": "Відкласти готівку",
+      "takeTitle": "Взяти з готівки",
+      "history": "Історія",
+      "deleteConfirm": "Видалити запис?"
+    },
+    "deposits": {
+      "title": "Депозити",
+      "add": "Новий депозит",
+      "empty": "Депозитів ще немає. Додайте — і побачите, скільки на ньому буде.",
+      "rate": "{rate}% річних",
+      "now": "Зараз на депозиті",
+      "contributed": "Внесено",
+      "interest": "Відсотки",
+      "interestNet": "чисті, після податку",
+      "nextTopUp": "поповнення {date}",
+      "endsOn": "до {date}",
+      "openEnded": "безстроковий",
+      "capitalization": "капіталізація",
+      "payout": "виплата відсотків",
+      "details": "Детальніше",
+      "form": {
+        "newTitle": "Новий депозит",
+        "editTitle": "Параметри депозиту",
+        "name": "Назва",
+        "namePlaceholder": "На відпустку",
+        "bank": "Банк",
+        "currency": "Валюта",
+        "rate": "Ставка, % річних",
+        "tax": "Податок, %",
+        "taxHint": "18% ПДФО + 5% військовий збір. Для військових — 19,5%",
+        "capitalization": "Відсотки",
+        "capitalizationOn": "Додаються до суми",
+        "capitalizationOff": "Виплачуються окремо",
+        "start": "Дата відкриття",
+        "term": "Строк",
+        "termOpen": "Безстроковий",
+        "termFixed": "На строк",
+        "termMonths": "Місяців",
+        "initial": "Початкова сума",
+        "topUp": "Щомісячне поповнення",
+        "topUpHint": "0 — без поповнень",
+        "topUpDay": "Число поповнення",
+        "person": "Чий депозит"
+      },
+      "detail": {
+        "projection": "Прогноз",
+        "projectionHint": "До сьогодні — за фактичними внесками, далі — за планом",
+        "today": "сьогодні",
+        "milestones": "Скільки буде",
+        "inMonths": "Через {count, plural, one {# місяць} few {# місяці} many {# місяців} other {# місяця}}",
+        "atEnd": "У кінці строку",
+        "contributions": "Внески",
+        "addContribution": "Додати внесок",
+        "contributionTitle": "Додатковий внесок",
+        "kinds": {
+          "INITIAL": "Початкова сума",
+          "SCHEDULED": "За графіком",
+          "EXTRA": "Додатковий"
+        },
+        "edit": "Змінити параметри",
+        "deleteConfirm": "Видалити депозит з усіма внесками?",
+        "deleteContributionConfirm": "Видалити внесок?"
+      }
+    }
   }
 }

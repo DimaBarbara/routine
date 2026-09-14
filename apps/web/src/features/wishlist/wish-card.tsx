@@ -8,9 +8,9 @@ import { forwardRef, type HTMLAttributes, useState } from 'react';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/cn';
+import { formatMoney } from '@/lib/money';
 
 import { CATEGORY_META } from './meta';
-import { formatPrice } from './price';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   item: WishItemDto;
@@ -84,7 +84,7 @@ export const WishCard = forwardRef<HTMLDivElement, Props>(function WishCard(
         <div className="flex flex-wrap items-center gap-2">
           {item.priceMinor !== null && (
             <span className="text-sm font-semibold tabular-nums">
-              {formatPrice(locale, item.priceMinor, item.currency)}
+              {formatMoney(locale, item.priceMinor, item.currency)}
             </span>
           )}
 

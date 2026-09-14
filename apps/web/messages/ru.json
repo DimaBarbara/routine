@@ -5,7 +5,10 @@
     "home": "Главная",
     "invites": "Приглашения",
     "invite": "Приглашение",
-    "wishlist": "Вишлист"
+    "wishlist": "Вишлист",
+    "finance": "Финансы",
+    "transactions": "Операции",
+    "savings": "Накопления"
   },
   "common": {
     "copy": "Копировать",
@@ -28,7 +31,8 @@
     "finances": "Финансы",
     "logout": "Выйти",
     "admin": "админ",
-    "space": "Пространство"
+    "space": "Пространство",
+    "finance": "Финансы"
   },
   "preferences": {
     "theme": "Тема",
@@ -91,7 +95,11 @@
     "invite": "Пригласить",
     "modules": "Модули",
     "wishlistModule": "Желания, потребности и подарки",
-    "financesModule": "Бюджет, расходы и импорт из Monobank"
+    "financesModule": "Бюджет, расходы и импорт из Monobank",
+    "financeTitle": "Финансы этого месяца",
+    "financeExpense": "Потрачено",
+    "financeIncome": "Получено",
+    "openFinance": "К финансам"
   },
   "invites": {
     "title": "Приглашения",
@@ -236,7 +244,15 @@
     "urlInvalid": "Нужна ссылка, начинающаяся с http:// или https://",
     "tooLong": "Слишком длинный текст",
     "priceInvalid": "Некорректная цена",
-    "priceTooHigh": "Слишком большая цена"
+    "priceTooHigh": "Слишком большая цена",
+    "amountInvalid": "Введите сумму больше нуля",
+    "amountTooHigh": "Слишком большая сумма",
+    "dateInvalid": "Некорректная дата",
+    "dayInvalid": "Число от 1 до 31",
+    "rateInvalid": "Процент от 0 до 100",
+    "termInvalid": "Срок — целое число месяцев",
+    "endBeforeStart": "Конец не может быть раньше начала",
+    "dateBeforeStart": "Дата раньше открытия депозита"
   },
   "errors": {
     "VALIDATION_FAILED": "Проверьте правильность заполнения",
@@ -263,6 +279,186 @@
     "WISHLIST_INVALID_OWNER": "Желание можно назначить только участнику пространства",
     "NOT_FOUND": "Не найдено",
     "INTERNAL": "Что-то пошло не так, попробуйте ещё раз",
-    "network": "Сервер недоступен, попробуйте позже"
+    "network": "Сервер недоступен, попробуйте позже",
+    "FINANCE_NOT_FOUND": "Запись не найдена — возможно, её удалили",
+    "FINANCE_INVALID_PERSON": "Можно указать только участника пространства",
+    "FINANCE_CASH_INSUFFICIENT": "В копилке нет столько в этой валюте"
+  },
+  "finance": {
+    "title": "Финансы",
+    "tabs": {
+      "overview": "Обзор",
+      "transactions": "Операции",
+      "savings": "Накопления"
+    },
+    "month": {
+      "prev": "Предыдущий месяц",
+      "next": "Следующий месяц"
+    },
+    "addExpense": "Расход",
+    "addIncome": "Доход",
+    "incomplete": "Для части валютных сумм не удалось получить курс НБУ — они не учтены в итогах.",
+    "kpi": {
+      "income": "Доходы",
+      "expense": "Расходы",
+      "balance": "Остаток месяца",
+      "saved": "Отложено наличными",
+      "fixedUnplanned": "фиксированные {fixed} · внеплановые {unplanned}",
+      "delta": "{delta} к прошлому месяцу"
+    },
+    "charts": {
+      "incomeExpense": "Доходы и расходы",
+      "incomeKinds": "Доходы по типу",
+      "lastMonths": "Последние 6 месяцев, в гривне",
+      "categories": "Расходы по категориям",
+      "categoriesHint": "По сравнению с прошлым месяцем",
+      "noExpenses": "В этом месяце расходов пока нет.",
+      "showTable": "Таблицей",
+      "showChart": "Графиком",
+      "month": "Месяц",
+      "total": "Итого",
+      "new": "новое",
+      "thousand": "{value} тыс.",
+      "million": "{value} млн"
+    },
+    "series": {
+      "income": "Доходы",
+      "expense": "Расходы",
+      "fixed": "Фиксированные",
+      "unplanned": "Внеплановые",
+      "contributed": "Внесено",
+      "interest": "Проценты"
+    },
+    "categories": {
+      "FOOD": "Продукты",
+      "CAFE": "Кафе и рестораны",
+      "ENTERTAINMENT": "Развлечения",
+      "TRANSPORT": "Транспорт",
+      "HOME": "Дом",
+      "UTILITIES": "Коммуналка",
+      "HEALTH": "Здоровье",
+      "BEAUTY": "Красота",
+      "CLOTHES": "Одежда",
+      "SUBSCRIPTIONS": "Подписки",
+      "EDUCATION": "Обучение",
+      "TRAVEL": "Путешествия",
+      "GIFTS": "Подарки",
+      "OTHER": "Другое"
+    },
+    "incomeKinds": {
+      "FIXED": "Фиксированный",
+      "UNPLANNED": "Внеплановый"
+    },
+    "transactions": {
+      "empty": "За этот месяц операций пока нет.",
+      "recurring": "регулярный",
+      "newExpense": "Новый расход",
+      "newIncome": "Новый доход",
+      "editTitle": "Операция",
+      "expense": "Расход",
+      "income": "Доход",
+      "amount": "Сумма",
+      "currency": "Валюта",
+      "category": "Категория",
+      "kind": "Тип дохода",
+      "date": "Дата",
+      "person": "Кто",
+      "nobody": "Не указано",
+      "note": "Заметка",
+      "notePlaceholderExpense": "На что потратили",
+      "notePlaceholderIncome": "Откуда деньги",
+      "deleteConfirm": "Удалить операцию?",
+      "approx": "≈ {amount}"
+    },
+    "recurring": {
+      "title": "Регулярные доходы",
+      "hint": "Появляются в операциях сами каждый месяц — как зарплата.",
+      "add": "Добавить",
+      "empty": "Регулярных доходов пока нет.",
+      "formTitle": "Регулярный доход",
+      "name": "Название",
+      "namePlaceholder": "Зарплата",
+      "day": "Число месяца",
+      "dayHint": "В коротких месяцах — последний день",
+      "start": "Начиная с",
+      "end": "До (необязательно)",
+      "every": "ежемесячно {day}-го",
+      "next": "следующий {date}",
+      "paused": "на паузе",
+      "pause": "Пауза",
+      "resume": "Возобновить",
+      "deleteConfirm": "Удалить? Созданные операции останутся."
+    },
+    "cash": {
+      "title": "Наличные",
+      "hint": "Одна копилка, любые валюты",
+      "empty": "Пока ничего не отложено.",
+      "total": "Итого ≈ {amount}",
+      "put": "Отложить",
+      "take": "Взять",
+      "putTitle": "Отложить наличные",
+      "takeTitle": "Взять из наличных",
+      "history": "История",
+      "deleteConfirm": "Удалить запись?"
+    },
+    "deposits": {
+      "title": "Депозиты",
+      "add": "Новый депозит",
+      "empty": "Депозитов пока нет. Добавьте — и увидите, сколько на нём будет.",
+      "rate": "{rate}% годовых",
+      "now": "Сейчас на депозите",
+      "contributed": "Внесено",
+      "interest": "Проценты",
+      "interestNet": "чистые, после налога",
+      "nextTopUp": "пополнение {date}",
+      "endsOn": "до {date}",
+      "openEnded": "бессрочный",
+      "capitalization": "капитализация",
+      "payout": "выплата процентов",
+      "details": "Подробнее",
+      "form": {
+        "newTitle": "Новый депозит",
+        "editTitle": "Параметры депозита",
+        "name": "Название",
+        "namePlaceholder": "На отпуск",
+        "bank": "Банк",
+        "currency": "Валюта",
+        "rate": "Ставка, % годовых",
+        "tax": "Налог, %",
+        "taxHint": "18% НДФЛ + 5% военный сбор. Для военных — 19,5%",
+        "capitalization": "Проценты",
+        "capitalizationOn": "Добавляются к сумме",
+        "capitalizationOff": "Выплачиваются отдельно",
+        "start": "Дата открытия",
+        "term": "Срок",
+        "termOpen": "Бессрочный",
+        "termFixed": "На срок",
+        "termMonths": "Месяцев",
+        "initial": "Начальная сумма",
+        "topUp": "Ежемесячное пополнение",
+        "topUpHint": "0 — без пополнений",
+        "topUpDay": "Число пополнения",
+        "person": "Чей депозит"
+      },
+      "detail": {
+        "projection": "Прогноз",
+        "projectionHint": "До сегодня — по фактическим взносам, дальше — по плану",
+        "today": "сегодня",
+        "milestones": "Сколько будет",
+        "inMonths": "Через {count, plural, one {# месяц} few {# месяца} many {# месяцев} other {# месяца}}",
+        "atEnd": "В конце срока",
+        "contributions": "Взносы",
+        "addContribution": "Добавить взнос",
+        "contributionTitle": "Дополнительный взнос",
+        "kinds": {
+          "INITIAL": "Начальная сумма",
+          "SCHEDULED": "По графику",
+          "EXTRA": "Дополнительный"
+        },
+        "edit": "Изменить параметры",
+        "deleteConfirm": "Удалить депозит со всеми взносами?",
+        "deleteContributionConfirm": "Удалить взнос?"
+      }
+    }
   }
 }

@@ -47,10 +47,10 @@ export function AppNav({ user, spaces, defaultSpaceId, canInvite }: Props) {
   const items: NavItem[] = [
     { href: '/dashboard', segment: 'dashboard', label: t('home'), icon: House },
     { href: `/s/${spaceId}/wishlist`, segment: 'wishlist', label: t('wishlist'), icon: Gift },
+    { href: `/s/${spaceId}/finance`, segment: 'finance', label: t('finance'), icon: Wallet },
     ...(canInvite
       ? [{ href: '/invites', segment: 'invites', label: t('invites'), icon: Mail }]
       : []),
-    { href: '#', segment: 'finances', label: t('finances'), icon: Wallet, soon: true },
   ];
   const segments = pathname.split('/');
   const isActive = (item: NavItem) => segments.includes(item.segment);

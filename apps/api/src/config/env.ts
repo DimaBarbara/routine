@@ -11,6 +11,10 @@ const envSchema = z.object({
     .transform((value) => value === 'true'),
   SESSION_TTL_DAYS: z.coerce.number().int().positive().default(30),
   INVITE_TTL_DAYS: z.coerce.number().int().positive().default(7),
+  /** «Сьогодні» для регулярних доходів і депозитів. Render живе в UTC. */
+  APP_TIMEZONE: z.string().default('Europe/Kyiv'),
+  /** nbu — офіційні курси; fixed — сталі курси без мережі (тести, офлайн). */
+  RATES_SOURCE: z.enum(['nbu', 'fixed']).default('nbu'),
 });
 
 export type Env = z.infer<typeof envSchema>;

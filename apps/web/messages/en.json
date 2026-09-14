@@ -5,7 +5,10 @@
     "home": "Home",
     "invites": "Invites",
     "invite": "Invite",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "finance": "Finances",
+    "transactions": "Transactions",
+    "savings": "Savings"
   },
   "common": {
     "copy": "Copy",
@@ -28,7 +31,8 @@
     "finances": "Finances",
     "logout": "Sign out",
     "admin": "admin",
-    "space": "Space"
+    "space": "Space",
+    "finance": "Finances"
   },
   "preferences": {
     "theme": "Theme",
@@ -91,7 +95,11 @@
     "invite": "Invite",
     "modules": "Modules",
     "wishlistModule": "Wants, needs and gifts",
-    "financesModule": "Budget, spending and Monobank import"
+    "financesModule": "Budget, spending and Monobank import",
+    "financeTitle": "Finances this month",
+    "financeExpense": "Spent",
+    "financeIncome": "Received",
+    "openFinance": "Open finances"
   },
   "invites": {
     "title": "Invites",
@@ -236,7 +244,15 @@
     "urlInvalid": "Enter a link starting with http:// or https://",
     "tooLong": "Text is too long",
     "priceInvalid": "Invalid price",
-    "priceTooHigh": "Price is too high"
+    "priceTooHigh": "Price is too high",
+    "amountInvalid": "Enter an amount above zero",
+    "amountTooHigh": "Amount is too large",
+    "dateInvalid": "Invalid date",
+    "dayInvalid": "A day from 1 to 31",
+    "rateInvalid": "A percentage from 0 to 100",
+    "termInvalid": "Term must be a whole number of months",
+    "endBeforeStart": "The end can’t be before the start",
+    "dateBeforeStart": "The date is before the deposit was opened"
   },
   "errors": {
     "VALIDATION_FAILED": "Please check the form",
@@ -263,6 +279,186 @@
     "WISHLIST_INVALID_OWNER": "A wish can only be assigned to a space member",
     "NOT_FOUND": "Not found",
     "INTERNAL": "Something went wrong, please try again",
-    "network": "Server is unavailable, please try later"
+    "network": "Server is unavailable, please try later",
+    "FINANCE_NOT_FOUND": "Record not found — it may have been deleted",
+    "FINANCE_INVALID_PERSON": "Only a space member can be selected",
+    "FINANCE_CASH_INSUFFICIENT": "There isn’t that much cash in this currency"
+  },
+  "finance": {
+    "title": "Finances",
+    "tabs": {
+      "overview": "Overview",
+      "transactions": "Transactions",
+      "savings": "Savings"
+    },
+    "month": {
+      "prev": "Previous month",
+      "next": "Next month"
+    },
+    "addExpense": "Expense",
+    "addIncome": "Income",
+    "incomplete": "NBU rates were unavailable for some foreign-currency amounts — they are excluded from totals.",
+    "kpi": {
+      "income": "Income",
+      "expense": "Expenses",
+      "balance": "Left this month",
+      "saved": "Saved in cash",
+      "fixedUnplanned": "fixed {fixed} · unplanned {unplanned}",
+      "delta": "{delta} vs last month"
+    },
+    "charts": {
+      "incomeExpense": "Income and expenses",
+      "incomeKinds": "Income by type",
+      "lastMonths": "Last 6 months, in UAH",
+      "categories": "Expenses by category",
+      "categoriesHint": "Compared with last month",
+      "noExpenses": "No expenses this month yet.",
+      "showTable": "Table",
+      "showChart": "Chart",
+      "month": "Month",
+      "total": "Total",
+      "new": "new",
+      "thousand": "{value}K",
+      "million": "{value}M"
+    },
+    "series": {
+      "income": "Income",
+      "expense": "Expenses",
+      "fixed": "Fixed",
+      "unplanned": "Unplanned",
+      "contributed": "Contributed",
+      "interest": "Interest"
+    },
+    "categories": {
+      "FOOD": "Groceries",
+      "CAFE": "Cafes & restaurants",
+      "ENTERTAINMENT": "Entertainment",
+      "TRANSPORT": "Transport",
+      "HOME": "Home",
+      "UTILITIES": "Utilities",
+      "HEALTH": "Health",
+      "BEAUTY": "Beauty",
+      "CLOTHES": "Clothes",
+      "SUBSCRIPTIONS": "Subscriptions",
+      "EDUCATION": "Education",
+      "TRAVEL": "Travel",
+      "GIFTS": "Gifts",
+      "OTHER": "Other"
+    },
+    "incomeKinds": {
+      "FIXED": "Fixed",
+      "UNPLANNED": "Unplanned"
+    },
+    "transactions": {
+      "empty": "No transactions this month yet.",
+      "recurring": "recurring",
+      "newExpense": "New expense",
+      "newIncome": "New income",
+      "editTitle": "Transaction",
+      "expense": "Expense",
+      "income": "Income",
+      "amount": "Amount",
+      "currency": "Currency",
+      "category": "Category",
+      "kind": "Income type",
+      "date": "Date",
+      "person": "Who",
+      "nobody": "Not set",
+      "note": "Note",
+      "notePlaceholderExpense": "What was it for",
+      "notePlaceholderIncome": "Where the money came from",
+      "deleteConfirm": "Delete this transaction?",
+      "approx": "≈ {amount}"
+    },
+    "recurring": {
+      "title": "Recurring income",
+      "hint": "Added to transactions automatically every month — like a salary.",
+      "add": "Add",
+      "empty": "No recurring income yet.",
+      "formTitle": "Recurring income",
+      "name": "Name",
+      "namePlaceholder": "Salary",
+      "day": "Day of month",
+      "dayHint": "In shorter months — the last day",
+      "start": "Starting from",
+      "end": "Until (optional)",
+      "every": "monthly on day {day}",
+      "next": "next {date}",
+      "paused": "paused",
+      "pause": "Pause",
+      "resume": "Resume",
+      "deleteConfirm": "Delete? Existing transactions will stay."
+    },
+    "cash": {
+      "title": "Cash",
+      "hint": "One stash, any currency",
+      "empty": "Nothing saved yet.",
+      "total": "Total ≈ {amount}",
+      "put": "Put aside",
+      "take": "Take out",
+      "putTitle": "Put cash aside",
+      "takeTitle": "Take cash out",
+      "history": "History",
+      "deleteConfirm": "Delete this entry?"
+    },
+    "deposits": {
+      "title": "Deposits",
+      "add": "New deposit",
+      "empty": "No deposits yet. Add one to see how much it will grow.",
+      "rate": "{rate}% per year",
+      "now": "Currently on deposit",
+      "contributed": "Contributed",
+      "interest": "Interest",
+      "interestNet": "net, after tax",
+      "nextTopUp": "top-up {date}",
+      "endsOn": "until {date}",
+      "openEnded": "open-ended",
+      "capitalization": "compounding",
+      "payout": "interest paid out",
+      "details": "Details",
+      "form": {
+        "newTitle": "New deposit",
+        "editTitle": "Deposit settings",
+        "name": "Name",
+        "namePlaceholder": "Holiday fund",
+        "bank": "Bank",
+        "currency": "Currency",
+        "rate": "Rate, % per year",
+        "tax": "Tax, %",
+        "taxHint": "18% income tax + 5% military levy. 19.5% for military personnel",
+        "capitalization": "Interest",
+        "capitalizationOn": "Added to the balance",
+        "capitalizationOff": "Paid out separately",
+        "start": "Opening date",
+        "term": "Term",
+        "termOpen": "Open-ended",
+        "termFixed": "Fixed term",
+        "termMonths": "Months",
+        "initial": "Initial amount",
+        "topUp": "Monthly top-up",
+        "topUpHint": "0 — no top-ups",
+        "topUpDay": "Top-up day",
+        "person": "Whose deposit"
+      },
+      "detail": {
+        "projection": "Projection",
+        "projectionHint": "Up to today — actual contributions, after that — the plan",
+        "today": "today",
+        "milestones": "How much it will be",
+        "inMonths": "In {count, plural, one {# month} other {# months}}",
+        "atEnd": "At the end of the term",
+        "contributions": "Contributions",
+        "addContribution": "Add contribution",
+        "contributionTitle": "Extra contribution",
+        "kinds": {
+          "INITIAL": "Initial amount",
+          "SCHEDULED": "Scheduled",
+          "EXTRA": "Extra"
+        },
+        "edit": "Edit settings",
+        "deleteConfirm": "Delete the deposit with all contributions?",
+        "deleteContributionConfirm": "Delete this contribution?"
+      }
+    }
   }
 }

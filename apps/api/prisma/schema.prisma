@@ -8,7 +8,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   // Кожен модуль — у власній схемі Postgres: межі модулів видно прямо в базі.
-  schemas  = ["public", "wishlist"]
+  schemas  = ["public", "wishlist", "finance"]
 }
 
 enum Role {
@@ -28,14 +28,19 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  memberships      Membership[]
-  sessions         Session[]
-  wishItems        WishItem[]        @relation("WishOwner")
-  wishItemsCreated WishItem[]        @relation("WishCreatedBy")
-  wishReservations WishReservation[]
-  wishShareLinks   WishShareLink[]
-  invitesCreated   Invite[]          @relation("InviteCreatedBy")
-  invitesAccepted  Invite[]          @relation("InviteAcceptedBy")
+  memberships                Membership[]
+  sessions                   Session[]
+  wishItems                  WishItem[]           @relation("WishOwner")
+  wishItemsCreated           WishItem[]           @relation("WishCreatedBy")
+  wishReservations           WishReservation[]
+  wishShareLinks             WishShareLink[]
+  financeTransactionsMade    FinanceTransaction[] @relation("FinanceTransactionPerson")
+  financeTransactionsCreated FinanceTransaction[] @relation("FinanceTransactionCreatedBy")
+  recurringIncomes           RecurringIncome[]
+  cashEntries                CashEntry[]
+  deposits                   Deposit[]
+  invitesCreated             Invite[]             @relation("InviteCreatedBy")
+  invitesAccepted            Invite[]             @relation("InviteAcceptedBy")
 
   @@schema("public")
 }
@@ -63,10 +68,14 @@ model Space {
   isPersonal Boolean  @default(false)
   createdAt  DateTime @default(now())
 
-  memberships    Membership[]
-  invites        Invite[]
-  wishItems      WishItem[]
-  wishShareLinks WishShareLink[]
+  memberships         Membership[]
+  invites             Invite[]
+  wishItems           WishItem[]
+  wishShareLinks      WishShareLink[]
+  financeTransactions FinanceTransaction[]
+  recurringIncomes    RecurringIncome[]
+  cashEntries         CashEntry[]
+  deposits            Deposit[]
 
   @@schema("public")
 }
@@ -215,4 +224,180 @@ model WishShareLink {
 
   @@unique([spaceId, userId])
   @@schema("wishlist")
+}
+
+// ─── Модуль фінансів ─────────────────────────────────────────────────────────
+// Гроші — цілі копійки (minor units), ставки — базисні пункти (15% = 1500). Жодних float у даних.
+
+enum TransactionType {
+  EXPENSE
+  INCOME
+
+  @@schema("finance")
+}
+
+enum ExpenseCategory {
+  FOOD
+  CAFE
+  ENTERTAINMENT
+  TRANSPORT
+  HOME
+  UTILITIES
+  HEALTH
+  BEAUTY
+  CLOTHES
+  SUBSCRIPTIONS
+  EDUCATION
+  TRAVEL
+  GIFTS
+  OTHER
+
+  @@schema("finance")
+}
+
+enum IncomeKind {
+  FIXED
+  UNPLANNED
+
+  @@schema("finance")
+}
+
+enum ContributionKind {
+  INITIAL
+  SCHEDULED
+  EXTRA
+
+  @@schema("finance")
+}
+
+model FinanceTransaction {
+  id                String           @id @default(cuid())
+  spaceId           String
+  type              TransactionType
+  amountMinor       Int
+  currency          String           @db.Char(3)
+  /// Лише для витрат.
+  category          ExpenseCategory?
+  /// Лише для доходів.
+  incomeKind        IncomeKind?
+  note              String?
+  date              DateTime         @db.Date
+  /// Хто витратив / заробив — учасник простору.
+  personId          String?
+  createdById       String?
+  /// Згенеровано з регулярного доходу.
+  recurringIncomeId String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  space           Space            @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  person          User?            @relation("FinanceTransactionPerson", fields: [personId], references: [id], onDelete: SetNull)
+  createdBy       User?            @relation("FinanceTransactionCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  recurringIncome RecurringIncome? @relation(fields: [recurringIncomeId], references: [id], onDelete: SetNull)
+
+  @@unique([recurringIncomeId, date])
+  @@index([spaceId, date])
+  @@schema("finance")
+}
+
+/// «Зарплата щомісяця 5-го». Операції створюються ліниво при читанні — на Render free крон ненадійний.
+model RecurringIncome {
+  id               String    @id @default(cuid())
+  spaceId          String
+  title            String
+  amountMinor      Int
+  currency         String    @db.Char(3)
+  /// 1–31; у коротких місяцях — останній день.
+  dayOfMonth       Int
+  startDate        DateTime  @db.Date
+  endDate          DateTime? @db.Date
+  personId         String?
+  pausedAt         DateTime?
+  /// До якої дати операції вже створено. Видалена вручну операція не відродиться.
+  generatedThrough DateTime? @db.Date
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  space        Space                @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  person       User?                @relation(fields: [personId], references: [id], onDelete: SetNull)
+  transactions FinanceTransaction[]
+
+  @@index([spaceId])
+  @@schema("finance")
+}
+
+/// Одна скарбничка готівки на простір: + відклав, − взяв. Валют може бути кілька.
+model CashEntry {
+  id          String   @id @default(cuid())
+  spaceId     String
+  amountMinor Int
+  currency    String   @db.Char(3)
+  date        DateTime @db.Date
+  note        String?
+  personId    String?
+  createdAt   DateTime @default(now())
+
+  space  Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  person User? @relation(fields: [personId], references: [id], onDelete: SetNull)
+
+  @@index([spaceId, date])
+  @@schema("finance")
+}
+
+model Deposit {
+  id                String    @id @default(cuid())
+  spaceId           String
+  name              String
+  bank              String?
+  currency          String    @db.Char(3)
+  annualRateBp      Int
+  /// 2300 = 23% (18% ПДФО + 5% військовий збір).
+  taxRateBp         Int       @default(2300)
+  /// true — відсотки додаються до суми щомісяця; false — виплачуються окремо.
+  capitalization    Boolean   @default(true)
+  startDate         DateTime  @db.Date
+  /// null — безстроковий.
+  termMonths        Int?
+  monthlyTopUpMinor Int       @default(0)
+  topUpDay          Int
+  personId          String?
+  generatedThrough  DateTime? @db.Date
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  space         Space                 @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  person        User?                 @relation(fields: [personId], references: [id], onDelete: SetNull)
+  contributions DepositContribution[]
+
+  @@index([spaceId])
+  @@schema("finance")
+}
+
+model DepositContribution {
+  id           String           @id @default(cuid())
+  depositId    String
+  kind         ContributionKind
+  amountMinor  Int
+  date         DateTime         @db.Date
+  /// Лише для планових: дата за графіком. Унікальна — навіть якщо два запити генерують одночасно.
+  scheduledFor DateTime?        @db.Date
+  note         String?
+  createdAt    DateTime         @default(now())
+
+  deposit Deposit @relation(fields: [depositId], references: [id], onDelete: Cascade)
+
+  @@unique([depositId, scheduledFor])
+  @@index([depositId, date])
+  @@schema("finance")
+}
+
+/// Офіційний курс НБУ: гривень за одиницю валюти × 10 000 (44.5526 → 445526).
+model ExchangeRate {
+  date       DateTime @db.Date
+  currency   String   @db.Char(3)
+  rateScaled Int
+  createdAt  DateTime @default(now())
+
+  @@id([currency, date])
+  @@schema("finance")
 }

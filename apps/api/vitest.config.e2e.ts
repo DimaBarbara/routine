@@ -14,6 +14,7 @@ export default defineConfig({
       NODE_ENV: 'test',
       DATABASE_URL: TEST_DATABASE_URL,
       WEB_URL: 'http://localhost:3000',
+      RATES_SOURCE: 'fixed',
     },
     fileParallelism: false,
     hookTimeout: 60_000,

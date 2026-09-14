@@ -8,13 +8,24 @@ import request from 'supertest';
 
 import { AppModule } from '../src/app.module.js';
 import { configureApp } from '../src/app.setup.js';
+import { ClockService } from '../src/common/clock.service.js';
 import { PrismaService } from '../src/database/prisma.service.js';
 import { assertTestDatabase } from './test-db.js';
 
 export type Agent = ReturnType<typeof request.agent>;
 
-export async function createTestApp() {
-  const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
+/** Керований «сьогодні»: тест може перемотувати час для регулярних доходів і депозитів. */
+export class TestClock {
+  constructor(public current = '2026-09-14') {}
+  today() {
+    return this.current;
+  }
+}
+
+export async function createTestApp({ clock }: { clock?: TestClock } = {}) {
+  const builder = Test.createTestingModule({ imports: [AppModule] });
+  if (clock) builder.overrideProvider(ClockService).useValue(clock);
+  const moduleRef = await builder.compile();
   const app = configureApp(moduleRef.createNestApplication<INestApplication<Server>>());
   await app.init();
 

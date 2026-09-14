@@ -1,9 +1,9 @@
-import { WISH_STATUSES, type WishBoard } from '@routine/contracts';
+import { type FinanceAnalytics, WISH_STATUSES, type WishBoard } from '@routine/contracts';
 import { ArrowRight, Gift, Plus, Wallet } from 'lucide-react';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ import { Card } from '@/components/ui/card';
 import { CATEGORY_META, STATUS_META } from '@/features/wishlist/meta';
 import { serverApi } from '@/lib/api/server';
 import { cn } from '@/lib/cn';
+import { formatMoney } from '@/lib/money';
 import { requireUser, spaceLabel } from '@/lib/session';
 import { canInvite, pickSpace, SPACE_COOKIE } from '@/lib/space';
 
@@ -22,14 +23,17 @@ export default async function HomePage() {
   const [user, cookieStore] = await Promise.all([requireUser(), cookies()]);
   const space = pickSpace(user, cookieStore.get(SPACE_COOKIE)?.value);
 
-  const [board, t, tw, ts, tn, tc] = await Promise.all([
+  const [board, finance, locale, t, tw, ts, tn] = await Promise.all([
     serverApi<WishBoard>(`/spaces/${space.id}/wishlist`),
+    serverApi<FinanceAnalytics>(`/spaces/${space.id}/finance/analytics?months=1`),
+    getLocale(),
     getTranslations('home'),
     getTranslations('wishlist'),
     getTranslations('spaces'),
     getTranslations('nav'),
-    getTranslations('common'),
   ]);
+  const thisMonth = finance.months.at(-1);
+  const financeHref = `/s/${space.id}/finance`;
 
   const boardHref = `/s/${space.id}/wishlist`;
   const recent = board.items
@@ -158,16 +162,39 @@ export default async function HomePage() {
                 </div>
               </Card>
             </Link>
-            <Card className="flex items-center gap-3 p-4 opacity-60">
-              <span className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-                <Wallet className="size-5" aria-hidden />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold">{tn('finances')}</p>
-                <p className="truncate text-xs text-muted-foreground">{t('financesModule')}</p>
-              </div>
-              <Badge>{tc('soon')}</Badge>
-            </Card>
+            <Link href={financeHref} className="group rounded-2xl">
+              <Card className="flex flex-col gap-3 p-4 transition group-hover:border-input">
+                <div className="flex items-center gap-3">
+                  <span className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white">
+                    <Wallet className="size-5" aria-hidden />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold">{tn('finance')}</p>
+                    <p className="truncate text-xs text-muted-foreground">{t('financeTitle')}</p>
+                  </div>
+                </div>
+                {thisMonth && (
+                  <dl className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="rounded-xl bg-muted/60 p-2.5">
+                      <dt className="text-xs text-muted-foreground">{t('financeExpense')}</dt>
+                      <dd className="font-semibold">
+                        {formatMoney(locale, thisMonth.expenseMinor, 'UAH')}
+                      </dd>
+                    </div>
+                    <div className="rounded-xl bg-muted/60 p-2.5">
+                      <dt className="text-xs text-muted-foreground">{t('financeIncome')}</dt>
+                      <dd className="font-semibold text-success">
+                        {formatMoney(
+                          locale,
+                          thisMonth.incomeFixedMinor + thisMonth.incomeUnplannedMinor,
+                          'UAH',
+                        )}
+                      </dd>
+                    </div>
+                  </dl>
+                )}
+              </Card>
+            </Link>
           </section>
         </div>
       </div>

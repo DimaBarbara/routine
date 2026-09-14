@@ -24,9 +24,9 @@ import { Modal } from '@/components/ui/modal';
 import { useErrorText } from '@/hooks/use-error-text';
 import { useZodForm } from '@/hooks/use-zod-form';
 import { api } from '@/lib/api/client';
+import { moneyInputValue, parseMoney } from '@/lib/money';
 
 import { CATEGORY_META } from './meta';
-import { parsePrice, priceInputValue } from './price';
 
 /** Значення «спільне» в select: порожній рядок, бо FormData не передає null. */
 const SHARED = '';
@@ -74,7 +74,7 @@ function ItemForm({
     status: data.get('status'),
     ownerId: data.get('ownerId') === SHARED ? null : data.get('ownerId'),
     priority: data.get('priority'),
-    priceMinor: parsePrice(data.get('price')),
+    priceMinor: parseMoney(data.get('price')),
     currency: data.get('currency'),
     url: data.get('url'),
     imageUrl: data.get('imageUrl'),
@@ -240,7 +240,7 @@ function ItemForm({
           label={t('wishlist.item.price')}
           name="price"
           inputMode="decimal"
-          defaultValue={priceInputValue(item?.priceMinor ?? null)}
+          defaultValue={moneyInputValue(item?.priceMinor ?? null)}
           placeholder="0"
           error={errors['priceMinor']}
         />

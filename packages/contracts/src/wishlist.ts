@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const CURRENCIES = ['UAH', 'USD', 'EUR'] as const;
-export type Currency = (typeof CURRENCIES)[number];
+import { CURRENCIES, type Currency, MAX_AMOUNT_MINOR } from './money.js';
+import { emptyToNull, optionalText } from './schema-helpers.js';
 
 /** Колонки дошки в порядку відображення. */
 export const WISH_STATUSES = ['WANT', 'NEED', 'THINKING', 'DONE'] as const;
@@ -32,16 +32,8 @@ export type WishCategory = (typeof WISH_CATEGORIES)[number];
 export const WISH_PRIORITIES = ['LOW', 'MEDIUM', 'HIGH'] as const;
 export type WishPriority = (typeof WISH_PRIORITIES)[number];
 
-/** 20 млн у копійках — межа Postgres INTEGER із запасом. */
-export const MAX_PRICE_MINOR = 2_000_000_000;
-
-const emptyToNull = (value: unknown) =>
-  typeof value === 'string' && value.trim() === '' ? null : value;
-
-const optionalText = (max: number) =>
-  z
-    .preprocess(emptyToNull, z.string().trim().max(max, { error: 'validation.tooLong' }).nullish())
-    .transform((value) => value ?? null);
+/** @deprecated Використовуйте MAX_AMOUNT_MINOR. */
+export const MAX_PRICE_MINOR = MAX_AMOUNT_MINOR;
 
 /** Лише http(s): `javascript:` у посиланні на товар — готовий XSS. */
 const optionalHttpUrl = z

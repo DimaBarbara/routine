@@ -29,6 +29,9 @@
   --warning: oklch(0.555 0.163 49);
   --warning-soft: oklch(0.962 0.059 95);
   --shadow: 0 1px 2px oklch(0.2 0.01 60 / 0.06), 0 1px 3px oklch(0.2 0.01 60 / 0.04);
+  /* Серії графіків: перевірено валідатором (CVD, контраст) проти --card у кожній темі. */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
 }
 
 .dark {
@@ -52,6 +55,8 @@
   --warning: oklch(0.82 0.15 80);
   --warning-soft: oklch(0.3 0.06 70);
   --shadow: 0 1px 2px oklch(0 0 0 / 0.4);
+  --series-1: #3987e5;
+  --series-2: #d95926;
 }
 
 @theme inline {
@@ -78,6 +83,8 @@
   --color-warning-soft: var(--warning-soft);
 
   --shadow-card: var(--shadow);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
 }
 
 @layer base {
