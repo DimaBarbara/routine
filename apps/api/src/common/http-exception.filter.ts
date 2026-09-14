@@ -15,6 +15,8 @@ const FALLBACK_CODES: Partial<Record<number, ErrorCode>> = {
   [HttpStatus.BAD_REQUEST]: 'VALIDATION_FAILED',
   [HttpStatus.UNAUTHORIZED]: 'AUTH_REQUIRED',
   [HttpStatus.NOT_FOUND]: 'NOT_FOUND',
+  // Єдине джерело 413 — завантаження фото понад ліміт multer.
+  [HttpStatus.PAYLOAD_TOO_LARGE]: 'PROFILE_AVATAR_INVALID',
 };
 
 /** Приводить будь-яку помилку до ApiErrorBody — фронт завжди отримує `code`. */

@@ -20,10 +20,11 @@ import {
   monthlyOccurrences,
   toDbDate,
 } from '../../common/dates.js';
+import { personSelect, toPersonOrNull } from '../../common/person.js';
 import { PrismaService } from '../../database/prisma.service.js';
 import type { Prisma } from '../../generated/prisma/client.js';
 import { ExchangeRatesService } from './exchange-rates.service.js';
-import { assertPerson, listMembers, personSelect } from './finance-people.js';
+import { assertPerson, listMembers } from './finance-people.js';
 import { ScheduleService } from './schedule.service.js';
 
 const transactionInclude = { person: personSelect } satisfies Prisma.FinanceTransactionInclude;
@@ -194,7 +195,7 @@ export class TransactionsService {
       incomeKind: row.incomeKind,
       note: row.note,
       date: fromDbDate(row.date),
-      person: row.person,
+      person: toPersonOrNull(row.person),
       recurringIncomeId: row.recurringIncomeId,
       amountBaseMinor: converted[index] ?? null,
     }));
@@ -222,7 +223,7 @@ export class TransactionsService {
       dayOfMonth: rule.dayOfMonth,
       startDate,
       endDate,
-      person: rule.person,
+      person: toPersonOrNull(rule.person),
       paused: rule.pausedAt !== null,
       nextDate: next && (!endDate || next <= endDate) ? next : null,
     };

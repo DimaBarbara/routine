@@ -97,6 +97,7 @@ export function TransactionList({ groups, ...dialogProps }: Props) {
                         <Avatar
                           id={transaction.person.id}
                           name={transaction.person.name}
+                          src={transaction.person.avatarUrl}
                           size="xs"
                         />
                       )}

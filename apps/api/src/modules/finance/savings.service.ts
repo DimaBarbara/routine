@@ -21,11 +21,12 @@ import {
   monthlyOccurrences,
   toDbDate,
 } from '../../common/dates.js';
+import { personSelect, toPersonOrNull } from '../../common/person.js';
 import { PrismaService } from '../../database/prisma.service.js';
 import type { Prisma } from '../../generated/prisma/client.js';
 import { depositEndDate, simulateDeposit } from './deposit-math.js';
 import { ExchangeRatesService } from './exchange-rates.service.js';
-import { assertPerson, listMembers, personSelect } from './finance-people.js';
+import { assertPerson, listMembers } from './finance-people.js';
 import { ScheduleService } from './schedule.service.js';
 
 /** Безстроковий депозит показуємо на два роки вперед. */
@@ -86,7 +87,7 @@ export class SavingsService {
         currency: entry.currency as Currency,
         date: fromDbDate(entry.date),
         note: entry.note,
-        person: entry.person,
+        person: toPersonOrNull(entry.person),
       })),
       members,
     };
@@ -337,7 +338,7 @@ export class SavingsService {
       endDate,
       monthlyTopUpMinor: row.monthlyTopUpMinor,
       topUpDay: row.topUpDay,
-      person: row.person,
+      person: toPersonOrNull(row.person),
       current: pastPoints.get(today) ?? zero(today),
       projection: anniversaries.map(
         (date) => (date <= today ? pastPoints.get(date) : futurePoints.get(date)) ?? zero(date),

@@ -12,5 +12,6 @@ import { SessionService } from './session.service.js';
   imports: [InvitesModule, SpacesModule],
   controllers: [AuthController],
   providers: [AuthService, SessionService, { provide: APP_GUARD, useClass: AuthGuard }],
+  exports: [AuthService, SessionService],
 })
 export class AuthModule {}

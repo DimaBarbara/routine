@@ -107,7 +107,12 @@ export const WishCard = forwardRef<HTMLDivElement, Props>(function WishCard(
           {showOwner && (
             <span className="ml-auto">
               {item.owner ? (
-                <Avatar id={item.owner.id} name={item.owner.name} size="xs" />
+                <Avatar
+                  id={item.owner.id}
+                  name={item.owner.name}
+                  src={item.owner.avatarUrl}
+                  size="xs"
+                />
               ) : (
                 <span
                   title={t('shared')}

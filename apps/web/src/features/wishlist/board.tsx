@@ -252,7 +252,13 @@ export function Board({ spaceId, board, currentUserId }: Props) {
               active={ownerFilter.kind === 'person' && ownerFilter.id === member.id}
               onClick={() => setOwnerFilter({ kind: 'person', id: member.id })}
             >
-              <Avatar id={member.id} name={member.name} size="xs" className="-ml-1" />
+              <Avatar
+                id={member.id}
+                name={member.name}
+                src={member.avatarUrl}
+                size="xs"
+                className="-ml-1"
+              />
               {member.name}
             </FilterChip>
           ))}

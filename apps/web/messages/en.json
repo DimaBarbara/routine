@@ -8,7 +8,8 @@
     "wishlist": "Wishlist",
     "finance": "Finances",
     "transactions": "Transactions",
-    "savings": "Savings"
+    "savings": "Savings",
+    "profile": "Profile"
   },
   "common": {
     "copy": "Copy",
@@ -32,7 +33,8 @@
     "logout": "Sign out",
     "admin": "admin",
     "space": "Space",
-    "finance": "Finances"
+    "finance": "Finances",
+    "profile": "Profile"
   },
   "preferences": {
     "theme": "Theme",
@@ -282,7 +284,9 @@
     "network": "Server is unavailable, please try later",
     "FINANCE_NOT_FOUND": "Record not found — it may have been deleted",
     "FINANCE_INVALID_PERSON": "Only a space member can be selected",
-    "FINANCE_CASH_INSUFFICIENT": "There isn’t that much cash in this currency"
+    "FINANCE_CASH_INSUFFICIENT": "There isn’t that much cash in this currency",
+    "PROFILE_WRONG_PASSWORD": "Current password is incorrect",
+    "PROFILE_AVATAR_INVALID": "Please choose a JPG, PNG or WebP image"
   },
   "finance": {
     "title": "Finances",
@@ -508,5 +512,26 @@
     "next": "Next month",
     "today": "Today",
     "clear": "Clear"
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "This is how other space members see you.",
+    "photo": "Photo",
+    "photoHint": "JPG, PNG or WebP. We’ll crop it to a square.",
+    "upload": "Upload photo",
+    "change": "Change",
+    "remove": "Remove",
+    "photoFailed": "Couldn’t read the file — try another image.",
+    "nameTitle": "Name",
+    "email": "Email",
+    "emailHint": "Your email is tied to your invite and can’t be changed.",
+    "saved": "Saved",
+    "passwordTitle": "Password",
+    "passwordHint": "Changing it signs you out on all other devices.",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "changePassword": "Change password",
+    "passwordChanged": "Password changed. Other devices have been signed out."
   }
 }

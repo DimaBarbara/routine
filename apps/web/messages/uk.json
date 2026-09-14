@@ -8,7 +8,8 @@
     "wishlist": "Вішліст",
     "finance": "Фінанси",
     "transactions": "Операції",
-    "savings": "Накопичення"
+    "savings": "Накопичення",
+    "profile": "Профіль"
   },
   "common": {
     "copy": "Копіювати",
@@ -32,7 +33,8 @@
     "logout": "Вийти",
     "admin": "адмін",
     "space": "Простір",
-    "finance": "Фінанси"
+    "finance": "Фінанси",
+    "profile": "Профіль"
   },
   "preferences": {
     "theme": "Тема",
@@ -282,7 +284,9 @@
     "network": "Сервер недоступний, спробуйте пізніше",
     "FINANCE_NOT_FOUND": "Запис не знайдено — можливо, його видалили",
     "FINANCE_INVALID_PERSON": "Можна вказати лише учасника простору",
-    "FINANCE_CASH_INSUFFICIENT": "У скарбничці немає стільки в цій валюті"
+    "FINANCE_CASH_INSUFFICIENT": "У скарбничці немає стільки в цій валюті",
+    "PROFILE_WRONG_PASSWORD": "Поточний пароль невірний",
+    "PROFILE_AVATAR_INVALID": "Потрібне зображення JPG, PNG або WebP"
   },
   "finance": {
     "title": "Фінанси",
@@ -508,5 +512,26 @@
     "next": "Наступний місяць",
     "today": "Сьогодні",
     "clear": "Очистити"
+  },
+  "profile": {
+    "title": "Профіль",
+    "subtitle": "Так вас бачать інші учасники простору.",
+    "photo": "Фото",
+    "photoHint": "JPG, PNG або WebP. Обріжемо до квадрата.",
+    "upload": "Завантажити фото",
+    "change": "Змінити",
+    "remove": "Прибрати",
+    "photoFailed": "Не вдалося прочитати файл — спробуйте інше зображення.",
+    "nameTitle": "Імʼя",
+    "email": "Пошта",
+    "emailHint": "Пошта привʼязана до запрошення, змінити її не можна.",
+    "saved": "Збережено",
+    "passwordTitle": "Пароль",
+    "passwordHint": "Після зміни всі інші пристрої вийдуть з акаунта.",
+    "currentPassword": "Поточний пароль",
+    "newPassword": "Новий пароль",
+    "confirmPassword": "Новий пароль ще раз",
+    "changePassword": "Змінити пароль",
+    "passwordChanged": "Пароль змінено. Інші пристрої вийшли з акаунта."
   }
 }

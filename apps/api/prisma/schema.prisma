@@ -19,14 +19,16 @@ enum Role {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String
-  passwordHash String
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String
+  passwordHash    String
   /// Лише адмін може видавати реєстраційні інвайти (spaceId = null).
-  isAdmin      Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  isAdmin         Boolean   @default(false)
+  /// Версія фото для URL (/api/users/:id/avatar?v=…): змінилась — браузер тягне нове, інакше бере з кешу.
+  avatarUpdatedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   memberships                Membership[]
   sessions                   Session[]
@@ -41,6 +43,20 @@ model User {
   deposits                   Deposit[]
   invitesCreated             Invite[]             @relation("InviteCreatedBy")
   invitesAccepted            Invite[]             @relation("InviteAcceptedBy")
+  userAvatars                UserAvatar[]
+
+  @@schema("public")
+}
+
+/// Фото профілю окремо від User: байти не мають тягнутись у кожен запит сесії.
+/// Невеликий JPEG/PNG/WebP (браузер стискає до 256px) — простіше, ніж окреме сховище на цьому масштабі.
+model UserAvatar {
+  userId    String   @id
+  data      Bytes
+  mimeType  String
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@schema("public")
 }

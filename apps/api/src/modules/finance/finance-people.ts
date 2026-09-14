@@ -1,7 +1,6 @@
 import { AppException } from '../../common/app-exception.js';
+import { personSelect, toPerson } from '../../common/person.js';
 import type { PrismaService } from '../../database/prisma.service.js';
-
-export const personSelect = { select: { id: true, name: true } } as const;
 
 /** Операцію можна приписати лише учаснику цього простору. */
 export async function assertPerson(
@@ -22,5 +21,5 @@ export async function listMembers(prisma: PrismaService, spaceId: string) {
     include: { user: personSelect },
     orderBy: { joinedAt: 'asc' },
   });
-  return memberships.map((membership) => membership.user);
+  return memberships.map((membership) => toPerson(membership.user));
 }

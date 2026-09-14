@@ -5,10 +5,11 @@ import {
   type WishReservationView,
 } from '@routine/contracts';
 
+import { personSelect, toPersonOrNull } from '../../common/person.js';
 import type { Prisma } from '../../generated/prisma/client.js';
 
 export const itemInclude = {
-  owner: { select: { id: true, name: true } },
+  owner: personSelect,
   reservation: { include: { user: { select: { name: true } } } },
 } satisfies Prisma.WishItemInclude;
 
@@ -65,7 +66,7 @@ export function toItemDto(item: ItemWithRelations, viewer: Viewer): WishItemDto 
     position: item.position,
     doneKind: item.doneKind,
     doneAt: item.doneAt?.toISOString() ?? null,
-    owner: item.owner,
+    owner: toPersonOrNull(item.owner),
     createdAt: item.createdAt.toISOString(),
     reservation: reservationView(item, viewer),
   };

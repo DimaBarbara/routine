@@ -7,6 +7,7 @@ import {
   optionalText,
   requiredText,
 } from './schema-helpers.js';
+import type { Person } from './spaces.js';
 
 export const EXPENSE_CATEGORIES = [
   'FOOD',
@@ -182,10 +183,7 @@ export const analyticsQuerySchema = z.object({
 
 // ── DTO ───────────────────────────────────────────────────────────────────────
 
-export interface FinancePerson {
-  id: string;
-  name: string;
-}
+export type FinancePerson = Person;
 
 export interface TransactionDto {
   id: string;

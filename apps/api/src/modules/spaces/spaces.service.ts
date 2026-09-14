@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { SpaceMember, SpaceSummary } from '@routine/contracts';
 
+import { avatarUrl } from '../../common/person.js';
 import { PrismaService } from '../../database/prisma.service.js';
 
 @Injectable()
@@ -47,6 +48,7 @@ export class SpacesService {
       id: user.id,
       name: user.name,
       email: user.email,
+      avatarUrl: avatarUrl(user),
       role,
       joinedAt: joinedAt.toISOString(),
     }));

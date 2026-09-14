@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { CURRENCIES, type Currency, MAX_AMOUNT_MINOR } from './money.js';
 import { emptyToNull, optionalText } from './schema-helpers.js';
+import type { Person } from './spaces.js';
 
 /** Колонки дошки в порядку відображення. */
 export const WISH_STATUSES = ['WANT', 'NEED', 'THINKING', 'DONE'] as const;
@@ -112,10 +113,7 @@ export type GuestReservationInput = z.infer<typeof guestReservationSchema>;
 export type WishReservationView =
   { status: 'FREE' } | { status: 'RESERVED'; by: string | null } | { status: 'RESERVED_BY_YOU' };
 
-export interface WishPerson {
-  id: string;
-  name: string;
-}
+export type WishPerson = Person;
 
 export interface WishItemDto {
   id: string;

@@ -16,7 +16,7 @@ import { cn } from '@/lib/cn';
 import { SPACE_COOKIE } from '@/lib/space';
 
 interface Props {
-  user: { id: string; name: string; email: string; isAdmin: boolean };
+  user: { id: string; name: string; email: string; isAdmin: boolean; avatarUrl: string | null };
   spaces: { id: string; label: string }[];
   defaultSpaceId: string;
   canInvite: boolean;
@@ -123,15 +123,25 @@ export function AppNav({ user, spaces, defaultSpaceId, canInvite }: Props) {
 
         <div className="flex flex-col gap-3 border-t border-border p-3">
           <Preferences className="justify-between px-1" />
-          <div className="flex items-center gap-3 rounded-xl p-2">
-            <Avatar id={user.id} name={user.name} size="md" />
-            <div className="min-w-0 flex-1">
-              <p className="flex items-center gap-1.5 truncate text-sm font-medium">
-                {user.name}
-                {user.isAdmin && <Badge tone="amber">{t('admin')}</Badge>}
-              </p>
-              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-            </div>
+          <div className="flex items-center gap-1">
+            <Link
+              href="/profile"
+              aria-current={segments.includes('profile') ? 'page' : undefined}
+              title={t('profile')}
+              className={cn(
+                'flex min-w-0 flex-1 items-center gap-3 rounded-xl p-2 transition hover:bg-muted',
+                segments.includes('profile') && 'bg-accent',
+              )}
+            >
+              <Avatar id={user.id} name={user.name} src={user.avatarUrl} size="md" />
+              <span className="min-w-0 flex-1">
+                <span className="flex items-center gap-1.5 truncate text-sm font-medium">
+                  {user.name}
+                  {user.isAdmin && <Badge tone="amber">{t('admin')}</Badge>}
+                </span>
+                <span className="block truncate text-xs text-muted-foreground">{user.email}</span>
+              </span>
+            </Link>
             <LogoutButton variant="icon" />
           </div>
         </div>
@@ -140,9 +150,15 @@ export function AppNav({ user, spaces, defaultSpaceId, canInvite }: Props) {
       {/* Мобільний: верхня панель + нижня навігація */}
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-2 border-b border-border bg-card/85 px-4 backdrop-blur lg:hidden">
         <Brand />
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <Preferences />
-          <LogoutButton variant="icon" />
+          <Link
+            href="/profile"
+            aria-label={t('profile')}
+            className="ml-1 rounded-full focus-visible:outline-2 focus-visible:outline-ring"
+          >
+            <Avatar id={user.id} name={user.name} src={user.avatarUrl} size="sm" />
+          </Link>
         </div>
       </header>
 

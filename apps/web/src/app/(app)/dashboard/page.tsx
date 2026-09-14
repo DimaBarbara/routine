@@ -134,7 +134,7 @@ export default async function HomePage() {
             <ul className="flex flex-col gap-3">
               {board.members.map((member) => (
                 <li key={member.id} className="flex items-center gap-3">
-                  <Avatar id={member.id} name={member.name} size="md" />
+                  <Avatar id={member.id} name={member.name} src={member.avatarUrl} size="md" />
                   <span className="text-sm font-medium">{member.name}</span>
                 </li>
               ))}

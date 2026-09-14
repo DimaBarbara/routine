@@ -14,13 +14,15 @@ export const loginSchema = z.object({
 });
 export type LoginInput = z.infer<typeof loginSchema>;
 
+export const nameSchema = z
+  .string({ error: 'validation.required' })
+  .trim()
+  .min(2, { error: 'validation.nameMin' })
+  .max(60, { error: 'validation.nameMax' });
+
 export const registerSchema = z.object({
   token: z.string({ error: 'validation.required' }).min(1, { error: 'validation.required' }),
-  name: z
-    .string({ error: 'validation.required' })
-    .trim()
-    .min(2, { error: 'validation.nameMin' })
-    .max(60, { error: 'validation.nameMax' }),
+  name: nameSchema,
   password: passwordSchema,
 });
 export type RegisterInput = z.infer<typeof registerSchema>;

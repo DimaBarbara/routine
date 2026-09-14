@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+
 import { cn } from '@/lib/cn';
 
 const PALETTE = [
@@ -21,31 +25,49 @@ function initials(name: string) {
   return ((parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '')).toUpperCase() || '?';
 }
 
-const sizes = { xs: 'size-5 text-[10px]', sm: 'size-7 text-xs', md: 'size-9 text-sm' };
+const sizes = {
+  xs: 'size-5 text-[10px]',
+  sm: 'size-7 text-xs',
+  md: 'size-9 text-sm',
+  xl: 'size-24 text-3xl',
+};
 
-export function Avatar({
-  id,
-  name,
-  size = 'sm',
-  className,
-}: {
+interface Props {
   id: string;
   name: string;
+  /** Фото; не завантажилось — показуємо ініціали. */
+  src?: string | null;
   size?: keyof typeof sizes;
   className?: string;
-}) {
+}
+
+export function Avatar({ id, name, src, size = 'sm', className }: Props) {
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const showPhoto = src && failedSrc !== src;
+
   return (
     <span
       title={name}
-      aria-label={name}
       className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-full font-semibold select-none',
-        colorFor(id),
+        'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold select-none',
+        !showPhoto && colorFor(id),
         sizes[size],
         className,
       )}
     >
-      {initials(name)}
+      {showPhoto ? (
+        // Фото з нашого ж API, розмір відомий — next/image тут нічого не дає.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={name}
+          draggable={false}
+          onError={() => setFailedSrc(src)}
+          className="size-full object-cover"
+        />
+      ) : (
+        <span aria-label={name}>{initials(name)}</span>
+      )}
     </span>
   );
 }

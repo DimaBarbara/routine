@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module.js';
 import { FinanceModule } from './modules/finance/finance.module.js';
 import { HealthController } from './modules/health/health.controller.js';
 import { InvitesModule } from './modules/invites/invites.module.js';
+import { ProfileModule } from './modules/profile/profile.module.js';
 import { SpacesModule } from './modules/spaces/spaces.module.js';
 import { WishlistModule } from './modules/wishlist/wishlist.module.js';
 
@@ -28,6 +29,7 @@ import { WishlistModule } from './modules/wishlist/wishlist.module.js';
     InvitesModule,
     WishlistModule,
     FinanceModule,
+    ProfileModule,
   ],
   controllers: [HealthController],
   providers: [{ provide: APP_FILTER, useClass: HttpExceptionFilter }],

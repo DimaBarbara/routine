@@ -12,6 +12,7 @@ import type {
 
 import { AppException } from '../../common/app-exception.js';
 import { generateToken } from '../../common/crypto.js';
+import { personSelect, toPerson } from '../../common/person.js';
 import type { Env } from '../../config/env.js';
 import { PrismaService } from '../../database/prisma.service.js';
 import type { Prisma, WishDoneKind, WishItem } from '../../generated/prisma/client.js';
@@ -43,7 +44,7 @@ export class WishBoardService {
       }),
       this.prisma.membership.findMany({
         where: { spaceId },
-        include: { user: { select: { id: true, name: true } } },
+        include: { user: personSelect },
         orderBy: { joinedAt: 'asc' },
       }),
       this.prisma.wishShareLink.findUnique({ where: { spaceId_userId: { spaceId, userId } } }),
@@ -51,7 +52,7 @@ export class WishBoardService {
 
     return {
       items: items.map((item) => toItemDto(item, { kind: 'member', userId })),
-      members: memberships.map((membership) => membership.user),
+      members: memberships.map((membership) => toPerson(membership.user)),
       shareUrl: this.shareUrl(link?.token ?? null),
     };
   }

@@ -3,6 +3,7 @@ import { hash, verify } from '@node-rs/argon2';
 import type { LoginInput, RegisterInput, SessionUser } from '@routine/contracts';
 
 import { AppException } from '../../common/app-exception.js';
+import { avatarUrl } from '../../common/person.js';
 import { PrismaService } from '../../database/prisma.service.js';
 import { InvitesService } from '../invites/invites.service.js';
 import { SpacesService } from '../spaces/spaces.service.js';
@@ -76,6 +77,7 @@ export class AuthService {
       email: user.email,
       name: user.name,
       isAdmin: user.isAdmin,
+      avatarUrl: avatarUrl(user),
       spaces: await this.spaces.listForUser(userId),
     };
   }
