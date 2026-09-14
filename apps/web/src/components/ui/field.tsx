@@ -13,10 +13,9 @@ import {
 import { cn } from '@/lib/cn';
 
 const control =
-  'w-full rounded-lg border bg-white px-3 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 disabled:bg-zinc-100 disabled:text-zinc-500 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-zinc-300 dark:focus:ring-zinc-100/10 dark:disabled:bg-zinc-800';
+  'w-full rounded-xl border bg-card px-3.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/70 focus:border-ring focus:ring-4 focus:ring-ring/15 disabled:bg-muted disabled:text-muted-foreground';
 
-const border = (error?: string) =>
-  error ? 'border-red-500' : 'border-zinc-300 dark:border-zinc-700';
+const border = (error?: string) => (error ? 'border-destructive' : 'border-input');
 
 interface FieldProps {
   label: string;
@@ -35,7 +34,7 @@ export function TextField({ label, error, hint, className, ...props }: InputProp
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={error || hint ? `${id}-desc` : undefined}
-        className={cn(control, 'h-10', border(error), className)}
+        className={cn(control, 'h-11', border(error), className)}
       />
     </FieldShell>
   );
@@ -61,7 +60,7 @@ export function PasswordField({
           type={visible ? 'text' : 'password'}
           aria-invalid={error ? true : undefined}
           aria-describedby={error || hint ? `${id}-desc` : undefined}
-          className={cn(control, 'h-10 pr-10', border(error), className)}
+          className={cn(control, 'h-11 pr-11', border(error), className)}
         />
         <button
           type="button"
@@ -69,7 +68,7 @@ export function PasswordField({
           aria-label={visible ? t('hidePassword') : t('showPassword')}
           aria-pressed={visible}
           aria-controls={id}
-          className="absolute inset-y-0 right-0 flex w-10 items-center justify-center rounded-r-lg text-zinc-400 hover:text-zinc-700 focus-visible:outline-2 focus-visible:outline-zinc-500 dark:hover:text-zinc-200"
+          className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
         >
           {visible ? (
             <EyeOff className="size-4" aria-hidden />
@@ -97,7 +96,7 @@ export function TextAreaField({
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={error || hint ? `${id}-desc` : undefined}
-        className={cn(control, 'min-h-20 py-2', border(error), className)}
+        className={cn(control, 'min-h-20 py-2.5', border(error), className)}
       />
     </FieldShell>
   );
@@ -119,11 +118,78 @@ export function SelectField({
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={error || hint ? `${id}-desc` : undefined}
-        className={cn(control, 'h-10', border(error), className)}
+        className={cn(control, 'h-11', border(error), className)}
       >
         {children}
       </select>
     </FieldShell>
+  );
+}
+
+/**
+ * Група радіокнопок у вигляді «чипів» або сегментів. Нативні input[type=radio]:
+ * працюють із FormData, клавіатурою та читачами екрана без додаткового коду.
+ */
+export function ChoiceField<T extends string>({
+  label,
+  name,
+  options,
+  defaultValue,
+  error,
+  variant = 'chips',
+  className,
+}: {
+  label: string;
+  name: string;
+  options: { value: T; label: string; icon?: React.ReactNode }[];
+  defaultValue?: T;
+  error?: string;
+  variant?: 'chips' | 'segmented';
+  className?: string;
+}) {
+  const id = useId();
+  return (
+    <fieldset
+      className={cn('flex flex-col gap-1.5', className)}
+      aria-describedby={error ? `${id}-desc` : undefined}
+    >
+      <legend className="mb-1.5 text-sm font-medium text-foreground">{label}</legend>
+      <div
+        className={cn(
+          variant === 'segmented'
+            ? 'grid auto-cols-fr grid-flow-col rounded-xl bg-muted p-1'
+            : 'flex flex-wrap gap-2',
+        )}
+      >
+        {options.map((option) => (
+          <label key={option.value} className="cursor-pointer">
+            <input
+              type="radio"
+              name={name}
+              value={option.value}
+              defaultChecked={option.value === defaultValue}
+              className="peer sr-only"
+            />
+            <span
+              className={cn(
+                'flex items-center justify-center gap-1.5 text-sm font-medium transition peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring',
+                variant === 'segmented'
+                  ? 'h-9 rounded-lg px-2 text-muted-foreground peer-checked:bg-card peer-checked:text-foreground peer-checked:shadow-card'
+                  : 'h-9 rounded-full border border-border px-3 text-muted-foreground peer-checked:border-primary peer-checked:bg-accent peer-checked:text-accent-foreground hover:border-input hover:text-foreground',
+              )}
+            >
+              {option.icon}
+              {option.label}
+            </span>
+          </label>
+        ))}
+      </div>
+      {error && (
+        <p id={`${id}-desc`} className="text-xs text-destructive">
+          {error}
+        </p>
+      )}
+    </fieldset>
   );
 }
 
@@ -136,14 +202,14 @@ function FieldShell({
 }: FieldProps & { id: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <label htmlFor={id} className="text-sm font-medium text-foreground">
         {label}
       </label>
       {children}
       {(error ?? hint) && (
         <p
           id={`${id}-desc`}
-          className={cn('text-xs', error ? 'text-red-600 dark:text-red-400' : 'text-zinc-500')}
+          className={cn('text-xs', error ? 'text-destructive' : 'text-muted-foreground')}
         >
           {error ?? hint}
         </p>

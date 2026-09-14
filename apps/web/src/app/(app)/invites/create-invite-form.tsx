@@ -85,7 +85,7 @@ export function CreateInviteForm({ isAdmin, targets }: Props) {
               readOnly
               value={created.url}
               onFocus={(event) => event.currentTarget.select()}
-              className="h-8 min-w-0 flex-1 rounded-md border border-emerald-300 bg-white px-2 font-mono text-xs text-zinc-900 dark:border-emerald-800 dark:bg-zinc-900 dark:text-zinc-100"
+              className="h-8 min-w-0 flex-1 rounded-md border border-input bg-card px-2 font-mono text-xs text-foreground"
             />
             <Button type="button" size="sm" variant="secondary" onClick={() => copy(created.url)}>
               {copied ? t('common.copied') : t('common.copy')}

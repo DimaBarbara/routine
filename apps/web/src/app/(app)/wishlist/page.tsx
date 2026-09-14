@@ -1,13 +1,11 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { SPACE_COOKIE } from '@/features/wishlists/space-switcher';
 import { requireUser } from '@/lib/session';
+import { pickSpace, SPACE_COOKIE } from '@/lib/space';
 
 /** Вхід у модуль: останній відкритий простір або перший доступний. */
-export default async function WishlistsEntryPage() {
+export default async function WishlistEntryPage() {
   const [user, cookieStore] = await Promise.all([requireUser(), cookies()]);
-  const remembered = cookieStore.get(SPACE_COOKIE)?.value;
-  const space = user.spaces.find((item) => item.id === remembered) ?? user.spaces[0]!;
-  redirect(`/s/${space.id}/wishlists`);
+  redirect(`/s/${pickSpace(user, cookieStore.get(SPACE_COOKIE)?.value).id}/wishlist`);
 }

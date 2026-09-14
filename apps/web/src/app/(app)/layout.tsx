@@ -1,44 +1,27 @@
-import Link from 'next/link';
+import { cookies } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
 
-import { LogoutButton } from '@/components/logout-button';
-import { Preferences } from '@/components/preferences';
-import { Badge } from '@/components/ui/badge';
-import { requireUser } from '@/lib/session';
+import { requireUser, spaceLabel } from '@/lib/session';
+import { canInvite, pickSpace, SPACE_COOKIE } from '@/lib/space';
 
-import { NavLink } from './nav-link';
+import { AppNav } from './app-nav';
 
 export default async function AppLayout({ children }: LayoutProps<'/'>) {
-  const user = await requireUser();
-  const t = await getTranslations('nav');
+  const [user, cookieStore, ts] = await Promise.all([
+    requireUser(),
+    cookies(),
+    getTranslations('spaces'),
+  ]);
 
   return (
-    <>
-      <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="mx-auto flex min-h-14 max-w-5xl flex-wrap items-center gap-x-2 gap-y-2 px-4 py-2">
-          <Link href="/dashboard" className="mr-4 font-semibold tracking-tight">
-            routine
-          </Link>
-          <nav className="flex gap-1">
-            <NavLink href="/dashboard" segment="dashboard">
-              {t('dashboard')}
-            </NavLink>
-            <NavLink href="/wishlists" segment="wishlists">
-              {t('wishlists')}
-            </NavLink>
-            <NavLink href="/invites" segment="invites">
-              {t('invites')}
-            </NavLink>
-          </nav>
-          <div className="ml-auto flex items-center gap-3">
-            <span className="hidden text-sm text-zinc-500 md:inline">{user.name}</span>
-            {user.isAdmin && <Badge tone="amber">{t('admin')}</Badge>}
-            <Preferences />
-            <LogoutButton />
-          </div>
-        </div>
-      </header>
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
-    </>
+    <div className="flex min-h-dvh flex-1 flex-col">
+      <AppNav
+        user={user}
+        spaces={user.spaces.map((space) => ({ id: space.id, label: spaceLabel(space, ts) }))}
+        defaultSpaceId={pickSpace(user, cookieStore.get(SPACE_COOKIE)?.value).id}
+        canInvite={canInvite(user)}
+      />
+      <main className="flex-1 px-4 pt-6 pb-24 sm:px-6 lg:pt-8 lg:pb-10 lg:pl-72">{children}</main>
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -9,7 +10,7 @@ import { api } from '@/lib/api/client';
 
 interface Props {
   redirectTo?: string;
-  variant?: 'ghost' | 'secondary';
+  variant?: 'ghost' | 'secondary' | 'icon';
 }
 
 export function LogoutButton({ redirectTo = '/login', variant = 'ghost' }: Props) {
@@ -25,6 +26,21 @@ export function LogoutButton({ redirectTo = '/login', variant = 'ghost' }: Props
       router.replace(redirectTo);
       router.refresh();
     }
+  }
+
+  if (variant === 'icon') {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={logout}
+        loading={loading}
+        aria-label={t('logout')}
+        title={t('logout')}
+      >
+        {!loading && <LogOut className="size-4" aria-hidden />}
+      </Button>
+    );
   }
 
   return (

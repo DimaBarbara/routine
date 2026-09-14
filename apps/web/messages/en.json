@@ -1,11 +1,11 @@
 {
   "meta": {
-    "description": "Wishlists, finances and other handy things for your people",
+    "description": "Wishlist, finances and other handy things for your people",
     "login": "Sign in",
-    "dashboard": "Dashboard",
+    "home": "Home",
     "invites": "Invites",
     "invite": "Invite",
-    "wishlists": "Wishlists"
+    "wishlist": "Wishlist"
   },
   "common": {
     "copy": "Copy",
@@ -15,16 +15,20 @@
     "delete": "Delete",
     "edit": "Edit",
     "create": "Create",
+    "add": "Add",
     "back": "Back",
     "close": "Close",
-    "confirmDelete": "Yes, delete"
+    "confirmDelete": "Yes, delete",
+    "soon": "soon"
   },
   "nav": {
-    "dashboard": "Dashboard",
+    "home": "Home",
+    "wishlist": "Wishlist",
     "invites": "Invites",
+    "finances": "Finances",
     "logout": "Sign out",
     "admin": "admin",
-    "wishlists": "Wishlists"
+    "space": "Space"
   },
   "preferences": {
     "theme": "Theme",
@@ -35,7 +39,7 @@
   },
   "spaces": {
     "mine": "My space",
-    "of": "{name}'s space",
+    "of": "{name}’s space",
     "members": "{count, plural, one {# member} other {# members}}"
   },
   "fields": {
@@ -46,8 +50,14 @@
     "showPassword": "Show password",
     "hidePassword": "Hide password"
   },
+  "auth": {
+    "tagline": "Everything that matters to your people, in one place",
+    "featureBoard": "A shared board of wants and needs",
+    "featureGifts": "Friends reserve gifts — the surprise stays a surprise",
+    "featureInvites": "Invite-only, no strangers"
+  },
   "login": {
-    "title": "Sign in",
+    "title": "Welcome back",
     "subtitle": "Registration is invite-only.",
     "submit": "Sign in"
   },
@@ -62,7 +72,7 @@
     "mismatchText": "You are signed in as <b>{current}</b>, but this invite was sent to <b>{invited}</b>. Sign out and open the link again.",
     "accept": "Accept invite",
     "alreadyHaveAccount": "You already have an account.",
-    "toDashboard": "Go to dashboard",
+    "toDashboard": "Go home",
     "loginToAccept": "An account for <b>{email}</b> already exists — sign in to accept.",
     "login": "Sign in",
     "registerTitle": "Create account",
@@ -70,24 +80,30 @@
     "passwordHint": "At least 8 characters",
     "register": "Create account"
   },
-  "dashboard": {
-    "greeting": "Hi, {name} 👋",
-    "signedInAs": "Signed in as {email}.",
-    "spaces": "Your spaces",
+  "home": {
+    "greeting": "Hi, {name}",
+    "subtitle": "Here is what’s happening in your space.",
+    "board": "Wishlist",
+    "openBoard": "Open board",
+    "recent": "Recently added",
+    "emptyRecent": "Nothing yet — add the first wish to the board.",
+    "members": "Members",
+    "invite": "Invite",
     "modules": "Modules",
-    "wishlistsCard": "Wish lists and gift reservations"
+    "wishlistModule": "Wants, needs and gifts",
+    "financesModule": "Budget, spending and Monobank import"
   },
   "invites": {
     "title": "Invites",
-    "description": "Invite someone to your space — they will be able to see and edit your data.",
-    "descriptionAdmin": "Invite someone to your space — they will be able to see and edit your data. Or create a separate account with its own space.",
+    "description": "Invite someone to your space — you will see and edit everything together.",
+    "descriptionAdmin": "Invite someone to your space — you will see and edit everything together. Or create a separate account with its own space.",
     "newTitle": "New invite",
     "sentTitle": "Sent",
     "emailPlaceholder": "friend@example.com",
     "target": "Where",
     "newAccount": "Separate account (own space)",
-    "created": "Invite for <b>{email}</b> created. Copy the link and send it — we won't show it again.",
-    "empty": "You haven't invited anyone yet.",
+    "created": "Invite for <b>{email}</b> created. Copy the link and send it — we won’t show it again.",
+    "empty": "You haven’t invited anyone yet.",
     "toSpace": "To space",
     "separateAccount": "Separate account",
     "until": "until {date}",
@@ -99,13 +115,122 @@
       "EXPIRED": "expired"
     }
   },
+  "wishlist": {
+    "title": "Wishlist",
+    "subtitle": "Your space’s shared board — drag cards between columns.",
+    "add": "Add a wish",
+    "addToColumn": "Add to “{column}”",
+    "emptyColumn": "Empty. Drag a card here.",
+    "ownerNote": "Reservations of your wishes are hidden — the surprise stays a surprise.",
+    "shared": "Shared",
+    "columns": {
+      "WANT": "Wants",
+      "NEED": "Needs",
+      "THINKING": "Thinking",
+      "DONE": "Done"
+    },
+    "columnHints": {
+      "WANT": "Things you want",
+      "NEED": "Things you really need",
+      "THINKING": "Do I really need this?",
+      "DONE": "Bought or gifted"
+    },
+    "categories": {
+      "CLOTHES": "Clothes",
+      "BEAUTY": "Beauty",
+      "SPORT": "Sport",
+      "TECH": "Tech",
+      "HOME": "Home",
+      "BOOKS": "Books",
+      "HOBBY": "Hobby",
+      "TRAVEL": "Travel",
+      "HEALTH": "Health",
+      "KIDS": "Kids",
+      "FOOD": "Food",
+      "OTHER": "Other"
+    },
+    "doneKinds": {
+      "BOUGHT": "Bought",
+      "GIFTED": "Gifted"
+    },
+    "priorities": {
+      "HIGH": "Really want",
+      "MEDIUM": "Want",
+      "LOW": "Would be nice"
+    },
+    "filters": {
+      "all": "All",
+      "mine": "Mine",
+      "shared": "Shared",
+      "owner": "For whom",
+      "category": "Category",
+      "clear": "Clear filters"
+    },
+    "item": {
+      "newTitle": "New wish",
+      "editTitle": "Wish",
+      "title": "What do you want",
+      "titlePlaceholder": "Sneakers, face cream, a vacuum…",
+      "category": "Category",
+      "status": "Column",
+      "owner": "For whom",
+      "ownerMe": "For me",
+      "priority": "How much do you want it",
+      "price": "Price",
+      "currency": "Currency",
+      "url": "Product link",
+      "imageUrl": "Image link",
+      "note": "Note",
+      "notePlaceholder": "Colour, size, model…",
+      "doneKind": "How it was done",
+      "open": "Open",
+      "deleteConfirm": "Delete this wish?",
+      "more": "Details"
+    },
+    "done": {
+      "title": "How did it go?",
+      "description": "“{title}” — bought it yourself or got it as a gift?"
+    },
+    "reservation": {
+      "reserve": "Reserve",
+      "cancel": "Cancel reservation",
+      "yours": "You’re reserving",
+      "reserved": "Reserved",
+      "reservedBy": "Reserved by {name}",
+      "guestName": "Your name",
+      "guestHint": "{owner} won’t see who reserved what."
+    },
+    "share": {
+      "button": "Share",
+      "title": "Link for friends",
+      "off": "Friends will see your Wants and Needs and can reserve a gift without an account.",
+      "on": "This link shows your Wants and Needs. Thinking, done items and other people’s wishes stay private.",
+      "enable": "Create link",
+      "regenerate": "Regenerate",
+      "regenerateHint": "The old link will stop working",
+      "disable": "Disable"
+    },
+    "public": {
+      "heading": "{name}’s wishes",
+      "guestInfo": "Reserve a gift so nobody buys the same one. {name} won’t see who reserved what.",
+      "ownerInfo": "This is your page. Reservations are hidden so the surprise isn’t spoiled.",
+      "unavailableTitle": "Page unavailable",
+      "unavailableText": "The link was disabled or regenerated. Ask for the current one.",
+      "empty": "No wishes yet."
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "It may have been deleted, or the link is wrong.",
+    "home": "Go home"
+  },
   "validation": {
     "required": "This field is required",
     "invalid": "Invalid value",
     "emailInvalid": "Invalid email",
     "passwordMin": "At least 8 characters",
     "passwordMax": "At most 128 characters",
-    "passwordMismatch": "Passwords don't match",
+    "passwordMismatch": "Passwords don’t match",
     "nameMin": "At least 2 characters",
     "nameMax": "At most 60 characters",
     "urlInvalid": "Enter a link starting with http:// or https://",
@@ -128,88 +253,16 @@
     "INVITE_ALREADY_MEMBER": "This person is already in the space",
     "INVITE_EMAIL_MISMATCH": "The invite was sent to a different email",
     "INVITE_REGISTRATION_ONLY": "This invite is for a new account, and you already have one",
-    "WISHLIST_NOT_FOUND": "List not found",
-    "WISHLIST_ITEM_NOT_FOUND": "Wish not found",
-    "WISHLIST_OWNER_CANNOT_RESERVE": "You can't reserve gifts from your own list",
+    "WISHLIST_NOT_FOUND": "Wishes page not found",
+    "WISHLIST_ITEM_NOT_FOUND": "Wish not found — it may have been deleted",
+    "WISHLIST_OWNER_CANNOT_RESERVE": "You can’t reserve your own wishes",
     "WISHLIST_ALREADY_RESERVED": "Someone has already reserved this gift",
     "WISHLIST_RESERVATION_NOT_FOUND": "Reservation not found",
     "WISHLIST_GUEST_NAME_REQUIRED": "Enter your name to reserve",
+    "WISHLIST_ITEM_NOT_RESERVABLE": "Only Wants and Needs can be reserved",
+    "WISHLIST_INVALID_OWNER": "A wish can only be assigned to a space member",
     "NOT_FOUND": "Not found",
     "INTERNAL": "Something went wrong, please try again",
     "network": "Server is unavailable, please try later"
-  },
-  "notFound": {
-    "title": "Page not found",
-    "text": "It may have been deleted, or the link is wrong.",
-    "home": "Go home"
-  },
-  "wishlists": {
-    "title": "Wishlists",
-    "space": "Space",
-    "newPlaceholder": "E.g. “Birthday”",
-    "newLabel": "New list",
-    "create": "Create list",
-    "empty": "No lists yet. Create the first one and share it with friends.",
-    "yours": "Your list",
-    "forOwner": "{name}’s list",
-    "items": "{count, plural, one {# wish} other {# wishes}}",
-    "updated": "updated {date}",
-    "allLists": "All lists",
-    "ownerNote": "You can’t see what others have reserved — the surprise stays a surprise.",
-    "addItem": "Add a wish",
-    "emptyItems": "This list is empty. Add the first wish.",
-    "editList": "Edit",
-    "deleteList": "Delete list",
-    "deleteListConfirm": "Delete the list with all its wishes?",
-    "listTitle": "Title",
-    "listDescription": "Description",
-    "listDescriptionPlaceholder": "When the party is, where to bring gifts…",
-    "share": {
-      "title": "Link for friends",
-      "off": "Create a link — anyone with it can view the list and reserve a gift without an account.",
-      "on": "Anyone with this link can view the list and reserve gifts.",
-      "enable": "Create link",
-      "regenerate": "Regenerate",
-      "regenerateHint": "The old link will stop working",
-      "disable": "Disable"
-    },
-    "item": {
-      "newTitle": "New wish",
-      "editTitle": "Edit wish",
-      "title": "What do you want",
-      "titlePlaceholder": "Coffee maker, a book, concert tickets…",
-      "url": "Product link",
-      "imageUrl": "Image link",
-      "price": "Price",
-      "currency": "Currency",
-      "priority": "How much do you want it",
-      "note": "Note",
-      "notePlaceholder": "Colour, size, model…",
-      "open": "Open",
-      "deleteConfirm": "Delete this wish?",
-      "priorities": {
-        "HIGH": "Really want",
-        "MEDIUM": "Want",
-        "LOW": "Would be nice"
-      }
-    },
-    "reservation": {
-      "reserve": "Reserve",
-      "cancel": "Cancel",
-      "yours": "Reserved by you",
-      "reserved": "Reserved",
-      "reservedBy": "Reserved by {name}",
-      "guestName": "Your name",
-      "guestHint": "{owner} won’t see who reserved what."
-    },
-    "shared": {
-      "heading": "{name}’s wishlist",
-      "guestInfo": "Reserve a gift so nobody buys the same one. {name} won’t see who reserved what.",
-      "ownerInfo": "This is your list. Reservations are hidden so the surprise isn’t spoiled.",
-      "unavailableTitle": "List unavailable",
-      "unavailableText": "The link was disabled or regenerated. Ask for the current one.",
-      "empty": "No wishes in this list yet.",
-      "madeWith": "Made with routine"
-    }
   }
 }

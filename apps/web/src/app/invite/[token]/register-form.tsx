@@ -38,7 +38,7 @@ export function RegisterForm({ token, email, spaceId }: Props) {
       {...formProps(async ({ name, password }) => {
         await api<SessionUser>('/auth/register', 'POST', { token, name, password });
         // Запросили в простір — одразу туди, а не в порожній особистий.
-        router.replace(spaceId ? `/s/${spaceId}/wishlists` : '/dashboard');
+        router.replace(spaceId ? `/s/${spaceId}/wishlist` : '/dashboard');
         router.refresh();
         return NAVIGATING;
       })}

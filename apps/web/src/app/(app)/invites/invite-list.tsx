@@ -41,17 +41,17 @@ export function InviteList({ invites }: { invites: InviteRow[] }) {
     }
   }
 
-  if (invites.length === 0) return <p className="text-sm text-zinc-500">{t('empty')}</p>;
+  if (invites.length === 0) return <p className="text-sm text-muted-foreground">{t('empty')}</p>;
 
   return (
     <div className="flex flex-col gap-3">
       {error && <Alert tone="error">{error}</Alert>}
-      <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
+      <ul className="divide-y divide-border">
         {invites.map((invite) => (
           <li key={invite.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-3">
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{invite.email}</p>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-muted-foreground">
                 {invite.space ? t('toSpace') : t('separateAccount')} ·{' '}
                 {t('until', { date: invite.expiresLabel })}
               </p>

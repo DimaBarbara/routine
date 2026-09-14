@@ -2,9 +2,10 @@
 
 import {
   guestReservationSchema,
-  type SharedWishlistViewer,
-  type WishlistItemDto,
+  type SharedWishViewer,
+  type WishItemDto,
 } from '@routine/contracts';
+import { ExternalLink, Gift } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -16,26 +17,26 @@ import { useErrorText } from '@/hooks/use-error-text';
 import { useZodForm } from '@/hooks/use-zod-form';
 import { api } from '@/lib/api/client';
 
-import { ItemCard } from './item-card';
-import { ReservationStatus } from './reservation-status';
+import { WishCard } from './wish-card';
 
 const GUEST_NAME_KEY = 'routine:guest-name';
 
 interface Props {
-  item: WishlistItemDto;
+  item: WishItemDto;
   token: string;
-  viewer: SharedWishlistViewer;
+  viewer: SharedWishViewer;
   ownerName: string;
 }
 
 /** Бажання на публічній сторінці: лише резервації, без редагування. */
-export function SharedItemCard({ item, token, viewer, ownerName }: Props) {
+export function PublicWishCard({ item, token, viewer, ownerName }: Props) {
+  const t = useTranslations('wishlist');
   const errorText = useErrorText();
   const router = useRouter();
   const [askName, setAskName] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const path = `/shared/wishlists/${token}/items/${item.id}/reservation`;
+  const path = `/shared/wishlist/${token}/items/${item.id}/reservation`;
 
   async function run(action: () => Promise<unknown>) {
     setBusy(true);
@@ -51,33 +52,58 @@ export function SharedItemCard({ item, token, viewer, ownerName }: Props) {
     }
   }
 
+  const reservation = item.reservation;
+
   return (
-    <ItemCard
+    <WishCard
       item={item}
+      showOwner={false}
+      className="h-full"
       footer={
-        item.reservation && (
-          <>
-            {askName ? (
+        <div className="mt-auto flex flex-col gap-2">
+          {item.url && (
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
+              {t('item.open')} <ExternalLink className="size-3.5" aria-hidden />
+            </a>
+          )}
+          {item.note && <p className="text-sm text-muted-foreground">{item.note}</p>}
+
+          {reservation?.status === 'FREE' &&
+            (askName ? (
               <GuestNameForm
                 ownerName={ownerName}
                 onCancel={() => setAskName(false)}
-                onSubmit={(guestName) =>
-                  api(path, 'POST', { guestName }).then(() => router.refresh())
-                }
+                onSubmit={(guestName) => run(() => api(path, 'POST', { guestName }))}
               />
             ) : (
-              <ReservationStatus
-                reservation={item.reservation}
-                busy={busy}
-                onReserve={() =>
+              <Button
+                variant="soft"
+                loading={busy}
+                onClick={() =>
                   viewer === 'GUEST' ? setAskName(true) : run(() => api(path, 'POST', {}))
                 }
-                onCancel={() => run(() => api(path, 'DELETE'))}
-              />
-            )}
-            {error && <Alert tone="error">{error}</Alert>}
-          </>
-        )
+              >
+                <Gift className="size-4" aria-hidden /> {t('reservation.reserve')}
+              </Button>
+            ))}
+
+          {reservation?.status === 'RESERVED_BY_YOU' && (
+            <Button
+              variant="secondary"
+              loading={busy}
+              onClick={() => run(() => api(path, 'DELETE'))}
+            >
+              {t('reservation.cancel')}
+            </Button>
+          )}
+
+          {error && <Alert tone="error">{error}</Alert>}
+        </div>
       }
     />
   );
@@ -96,7 +122,7 @@ function GuestNameForm({
   const { errors, formError, submitting, formProps } = useZodForm(
     guestReservationSchema.required(),
   );
-  // Читаємо лише в браузері й лише коли форма відкрита — без розбіжностей гідратації.
+  // Форма зʼявляється лише після кліку — localStorage читаємо вже в браузері, без розбіжностей.
   const [savedName] = useState(() => {
     try {
       return localStorage.getItem(GUEST_NAME_KEY) ?? '';
@@ -119,17 +145,17 @@ function GuestNameForm({
     >
       {formError && <Alert tone="error">{formError}</Alert>}
       <TextField
-        label={t('wishlists.reservation.guestName')}
+        label={t('wishlist.reservation.guestName')}
         name="guestName"
         defaultValue={savedName}
         autoComplete="given-name"
         autoFocus
-        hint={t('wishlists.reservation.guestHint', { owner: ownerName })}
+        hint={t('wishlist.reservation.guestHint', { owner: ownerName })}
         error={errors['guestName']}
       />
       <div className="flex gap-2">
         <Button type="submit" size="sm" loading={submitting} className="flex-1">
-          {t('wishlists.reservation.reserve')}
+          {t('wishlist.reservation.reserve')}
         </Button>
         <Button type="button" size="sm" variant="ghost" onClick={onCancel}>
           {t('common.cancel')}

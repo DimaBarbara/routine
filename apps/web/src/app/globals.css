@@ -1,12 +1,101 @@
 @import 'tailwindcss';
 
-/* Тема перемикається класом .dark на <html> (src/lib/theme), а не лише системним налаштуванням. */
+/* Тема — клас .dark на <html> (src/lib/theme), а не лише системне налаштування. */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Семантичні токени: компоненти кажуть «картка», «приглушений текст», «основна дія»,
+ * а не конкретний колір. Світла й темна теми — лише різні значення тут.
+ * Теплі нейтральні (stone) + фіолетовий акцент.
+ */
+:root {
+  --background: oklch(0.984 0.003 75);
+  --foreground: oklch(0.216 0.006 56);
+  --card: oklch(1 0 0);
+  --muted: oklch(0.962 0.004 75);
+  --muted-foreground: oklch(0.52 0.012 58);
+  --border: oklch(0.918 0.005 60);
+  --input: oklch(0.88 0.006 60);
+  --ring: oklch(0.606 0.25 293);
+  --primary: oklch(0.541 0.281 293);
+  --primary-hover: oklch(0.491 0.27 293);
+  --primary-foreground: oklch(0.99 0 0);
+  --accent: oklch(0.955 0.03 294);
+  --accent-foreground: oklch(0.47 0.22 293);
+  --destructive: oklch(0.577 0.245 27);
+  --destructive-soft: oklch(0.962 0.03 17);
+  --success: oklch(0.527 0.154 150);
+  --success-soft: oklch(0.955 0.045 155);
+  --warning: oklch(0.555 0.163 49);
+  --warning-soft: oklch(0.962 0.059 95);
+  --shadow: 0 1px 2px oklch(0.2 0.01 60 / 0.06), 0 1px 3px oklch(0.2 0.01 60 / 0.04);
+}
+
+.dark {
+  --background: oklch(0.155 0.004 50);
+  --foreground: oklch(0.96 0.002 75);
+  --card: oklch(0.2 0.005 50);
+  --muted: oklch(0.245 0.006 50);
+  --muted-foreground: oklch(0.7 0.01 60);
+  --border: oklch(0.29 0.007 50);
+  --input: oklch(0.34 0.008 50);
+  --ring: oklch(0.702 0.183 294);
+  --primary: oklch(0.606 0.25 293);
+  --primary-hover: oklch(0.65 0.22 293);
+  --primary-foreground: oklch(0.99 0 0);
+  --accent: oklch(0.3 0.08 293);
+  --accent-foreground: oklch(0.83 0.1 294);
+  --destructive: oklch(0.7 0.19 25);
+  --destructive-soft: oklch(0.3 0.08 25);
+  --success: oklch(0.77 0.15 155);
+  --success-soft: oklch(0.29 0.06 155);
+  --warning: oklch(0.82 0.15 80);
+  --warning-soft: oklch(0.3 0.06 70);
+  --shadow: 0 1px 2px oklch(0 0 0 / 0.4);
+}
 
 @theme inline {
   --font-sans: var(--font-inter);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+
+  --shadow-card: var(--shadow);
 }
 
-body {
-  @apply bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  ::selection {
+    @apply bg-primary/20;
+  }
+}
+
+/* Горизонтальний скрол дошки без візуального шуму. */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }

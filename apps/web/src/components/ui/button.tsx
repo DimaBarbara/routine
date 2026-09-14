@@ -3,22 +3,21 @@ import type { ButtonHTMLAttributes } from 'react';
 import { cn } from '@/lib/cn';
 
 const variants = {
-  primary:
-    'bg-zinc-900 text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300',
-  secondary:
-    'border border-zinc-300 bg-white text-zinc-900 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800',
-  ghost:
-    'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
-  danger: 'text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950',
+  primary: 'bg-primary text-primary-foreground shadow-card hover:bg-primary-hover',
+  secondary: 'border border-border bg-card text-foreground shadow-card hover:bg-muted',
+  ghost: 'text-muted-foreground hover:bg-muted hover:text-foreground',
+  soft: 'bg-accent text-accent-foreground hover:bg-accent/70',
+  danger: 'text-destructive hover:bg-destructive-soft',
 };
 
 const sizes = {
-  sm: 'h-8 px-3 text-sm',
-  md: 'h-10 px-4 text-sm',
-  lg: 'h-14 px-6 text-lg',
+  sm: 'h-8 gap-1.5 px-3 text-sm',
+  md: 'h-10 gap-2 px-4 text-sm',
+  lg: 'h-12 gap-2 px-6 text-base',
+  icon: 'size-9',
 };
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
   loading?: boolean;
@@ -39,9 +38,9 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors',
-        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-500',
-        'disabled:cursor-not-allowed disabled:opacity-50',
+        'inline-flex shrink-0 items-center justify-center rounded-xl font-medium whitespace-nowrap transition-colors',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+        'disabled:pointer-events-none disabled:opacity-50',
         variants[variant],
         sizes[size],
         className,

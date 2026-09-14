@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import {
   type GuestReservationInput,
   guestReservationSchema,
-  type SharedWishlist,
-  type WishlistItemDto,
+  type SharedWishBoard,
+  type WishItemDto,
 } from '@routine/contracts';
 import type { Response } from 'express';
 
@@ -18,10 +18,10 @@ import { ReservationsService } from './reservations.service.js';
 const GUEST_COOKIE = 'routine_guest';
 const GUEST_COOKIE_MAX_AGE_MS = 365 * 24 * 60 * 60 * 1000;
 
-/** Публічна сторінка вішліста за посиланням: без акаунта, лише перегляд і резервації. */
+/** Особиста публічна сторінка бажань: без акаунта, лише перегляд і резервації. */
 @Public()
-@Controller('shared/wishlists')
-export class SharedWishlistsController {
+@Controller('shared/wishlist')
+export class SharedWishlistController {
   constructor(
     private readonly reservations: ReservationsService,
     private readonly config: ConfigService<Env, true>,
@@ -32,7 +32,7 @@ export class SharedWishlistsController {
     @Param('token') token: string,
     @OptionalUser() user: AuthUser | null,
     @Req() req: AppRequest,
-  ): Promise<SharedWishlist> {
+  ): Promise<SharedWishBoard> {
     return this.reservations.getShared(token, user?.id ?? null, this.guestToken(req));
   }
 
@@ -44,7 +44,7 @@ export class SharedWishlistsController {
     @Body(new ZodValidationPipe(guestReservationSchema)) body: GuestReservationInput,
     @Req() req: AppRequest,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<WishlistItemDto> {
+  ): Promise<WishItemDto> {
     const { item, issuedGuestToken } = await this.reservations.reserveShared(
       token,
       itemId,
@@ -71,7 +71,7 @@ export class SharedWishlistsController {
     @Param('itemId') itemId: string,
     @OptionalUser() user: AuthUser | null,
     @Req() req: AppRequest,
-  ): Promise<WishlistItemDto> {
+  ): Promise<WishItemDto> {
     return this.reservations.cancelShared(token, itemId, user?.id ?? null, this.guestToken(req));
   }
 

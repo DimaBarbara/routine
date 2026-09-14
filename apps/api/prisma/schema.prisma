@@ -30,8 +30,10 @@ model User {
 
   memberships      Membership[]
   sessions         Session[]
-  wishlists        Wishlist[]
+  wishItems        WishItem[]        @relation("WishOwner")
+  wishItemsCreated WishItem[]        @relation("WishCreatedBy")
   wishReservations WishReservation[]
+  wishShareLinks   WishShareLink[]
   invitesCreated   Invite[]          @relation("InviteCreatedBy")
   invitesAccepted  Invite[]          @relation("InviteAcceptedBy")
 
@@ -61,9 +63,10 @@ model Space {
   isPersonal Boolean  @default(false)
   createdAt  DateTime @default(now())
 
-  memberships Membership[]
-  invites     Invite[]
-  wishlists   Wishlist[]
+  memberships    Membership[]
+  invites        Invite[]
+  wishItems      WishItem[]
+  wishShareLinks WishShareLink[]
 
   @@schema("public")
 }
@@ -107,6 +110,40 @@ model Invite {
 }
 
 // ─── Модуль вішліста ─────────────────────────────────────────────────────────
+// Одна канбан-дошка на простір: колонка — статус, категорія — поле бажання.
+
+enum WishStatus {
+  WANT
+  NEED
+  THINKING
+  DONE
+
+  @@schema("wishlist")
+}
+
+enum WishDoneKind {
+  BOUGHT
+  GIFTED
+
+  @@schema("wishlist")
+}
+
+enum WishCategory {
+  CLOTHES
+  BEAUTY
+  SPORT
+  TECH
+  HOME
+  BOOKS
+  HOBBY
+  TRAVEL
+  HEALTH
+  KIDS
+  FOOD
+  OTHER
+
+  @@schema("wishlist")
+}
 
 enum WishPriority {
   LOW
@@ -116,44 +153,35 @@ enum WishPriority {
   @@schema("wishlist")
 }
 
-model Wishlist {
-  id          String   @id @default(cuid())
+model WishItem {
+  id          String        @id @default(cuid())
   spaceId     String
-  /// Для кого список. Лише ця людина не бачить резервацій — інакше зникає сюрприз.
-  ownerId     String
+  /// Для кого бажання; null — спільне на весь простір. Лише ця людина не бачить резервацій.
+  ownerId     String?
+  createdById String?
   title       String
-  description String?
-  /// Токен публічного посилання; null — посилання вимкнене.
-  shareToken  String?  @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  space Space          @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-  owner User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  items WishlistItem[]
-
-  @@index([spaceId])
-  @@schema("wishlist")
-}
-
-model WishlistItem {
-  id         String       @id @default(cuid())
-  wishlistId String
-  title      String
-  url        String?
-  imageUrl   String?
+  url         String?
+  imageUrl    String?
   /// Ціна в мінорних одиницях (копійках). Гроші ніколи не зберігаємо у float.
-  priceMinor Int?
-  currency   String       @default("UAH") @db.Char(3)
-  priority   WishPriority @default(MEDIUM)
-  note       String?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  priceMinor  Int?
+  currency    String        @default("UAH") @db.Char(3)
+  priority    WishPriority  @default(MEDIUM)
+  category    WishCategory  @default(OTHER)
+  note        String?
+  status      WishStatus    @default(WANT)
+  /// Порядок у колонці. Дробовий: вставка між сусідами не переписує решту карток.
+  position    Float
+  doneKind    WishDoneKind?
+  doneAt      DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
-  wishlist    Wishlist         @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  space       Space            @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  owner       User?            @relation("WishOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  createdBy   User?            @relation("WishCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   reservation WishReservation?
 
-  @@index([wishlistId])
+  @@index([spaceId, status, position])
   @@schema("wishlist")
 }
 
@@ -167,9 +195,24 @@ model WishReservation {
   guestTokenHash String?
   createdAt      DateTime @default(now())
 
-  item WishlistItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  user User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item WishItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([guestTokenHash])
+  @@schema("wishlist")
+}
+
+/// Особисте публічне посилання: показує бажання людини в цьому просторі, щоб друзі могли резервувати.
+model WishShareLink {
+  id        String   @id @default(cuid())
+  spaceId   String
+  userId    String
+  token     String   @unique
+  createdAt DateTime @default(now())
+
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([spaceId, userId])
   @@schema("wishlist")
 }

@@ -141,7 +141,7 @@ describe('Інвайти, простори та спільний лічильн�
       .expect(404);
   });
 
-  it('дівчина реєструється за інвайтом у простір адміна і бачить обидва простори', async () => {
+  it('дівчина реєструється за інвайтом у простір адміна і живе в ньому, без окремого простору', async () => {
     const invite = (
       await admin
         .post('/api/invites')
@@ -157,9 +157,8 @@ describe('Інвайти, простори та спільний лічильн�
         .expect(201)
     ).body as SessionUser;
 
-    expect(me.spaces.map((space) => space.id)).toContain(adminSpaceId);
-    expect(me.spaces).toHaveLength(2);
-    expect(me.spaces.find((space) => space.id === adminSpaceId)?.role).toBe('MEMBER');
+    expect(me.spaces).toHaveLength(1);
+    expect(me.spaces[0]).toMatchObject({ id: adminSpaceId, role: 'MEMBER', memberCount: 2 });
   });
 
   it('інвайт одноразовий', async () => {

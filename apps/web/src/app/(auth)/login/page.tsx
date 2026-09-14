@@ -20,7 +20,7 @@ export default async function LoginPage({ searchParams }: PageProps<'/login'>) {
   const t = await getTranslations('login');
   return (
     <AuthShell title={t('title')}>
-      <p className="mb-6 text-sm text-zinc-500">{t('subtitle')}</p>
+      <p className="mb-6 text-sm text-muted-foreground">{t('subtitle')}</p>
       <LoginForm next={next} />
     </AuthShell>
   );

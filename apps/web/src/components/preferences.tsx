@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTransition } from 'react';
 
-import { isLocale, LOCALE_COOKIE, localeNames, locales } from '@/i18n/config';
+import { isLocale, LOCALE_COOKIE, locales } from '@/i18n/config';
 import { cn } from '@/lib/cn';
 import { useTheme } from '@/lib/theme/use-theme';
 
@@ -32,7 +32,7 @@ function ThemeSwitcher() {
     <div
       role="radiogroup"
       aria-label={t('theme')}
-      className="inline-flex rounded-lg border border-zinc-200 p-0.5 dark:border-zinc-800"
+      className="inline-flex rounded-xl bg-muted p-0.5"
     >
       {THEMES.map(({ value, icon: Icon }) => {
         // До гідратації theme === null: жодна кнопка не підсвічена, розбіжності немає.
@@ -47,13 +47,13 @@ function ThemeSwitcher() {
             title={t(value)}
             onClick={() => setTheme(value)}
             className={cn(
-              'flex size-7 items-center justify-center rounded-md transition-colors',
+              'flex size-7 items-center justify-center rounded-[10px] transition',
               active
-                ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100',
+                ? 'bg-card text-foreground shadow-card'
+                : 'text-muted-foreground hover:text-foreground',
             )}
           >
-            <Icon className="size-4" aria-hidden />
+            <Icon className="size-3.5" aria-hidden />
           </button>
         );
       })}
@@ -79,11 +79,11 @@ function LocaleSwitcher() {
       value={locale}
       disabled={isPending}
       onChange={(event) => change(event.target.value)}
-      className="h-8 rounded-lg border border-zinc-200 bg-transparent px-2 text-sm text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+      className="h-8 rounded-xl border-0 bg-muted px-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
     >
       {locales.map((value) => (
         <option key={value} value={value}>
-          {localeNames[value]}
+          {value === 'uk' ? 'UA' : value.toUpperCase()}
         </option>
       ))}
     </select>

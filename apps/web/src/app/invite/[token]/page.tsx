@@ -29,7 +29,7 @@ export default async function InvitePage({ params }: PageProps<'/invite/[token]'
     if (!(error instanceof ApiError) || error.status >= 500) throw error;
     return (
       <AuthShell title={t('invalidTitle')}>
-        <p className="text-sm text-zinc-500">{t('invalidText')}</p>
+        <p className="text-sm text-muted-foreground">{t('invalidText')}</p>
         <Link href="/login" className="mt-6 inline-block text-sm font-medium underline">
           {t('toLogin')}
         </Link>
@@ -46,7 +46,7 @@ export default async function InvitePage({ params }: PageProps<'/invite/[token]'
   if (user && user.email !== preview.email) {
     return (
       <AuthShell title={t('mismatchTitle')}>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-muted-foreground">
           {t.rich('mismatchText', { current: user.email, invited: preview.email, b: bold })}
         </p>
         <div className="mt-6">
@@ -59,7 +59,7 @@ export default async function InvitePage({ params }: PageProps<'/invite/[token]'
   if (user) {
     return (
       <AuthShell title={t('title')}>
-        <p className="mb-6 text-sm text-zinc-500">{intro}</p>
+        <p className="mb-6 text-sm text-muted-foreground">{intro}</p>
         {preview.spaceId ? (
           <AcceptInvite token={token} spaceId={preview.spaceId} />
         ) : (
@@ -77,12 +77,12 @@ export default async function InvitePage({ params }: PageProps<'/invite/[token]'
   if (preview.accountExists) {
     return (
       <AuthShell title={t('title')}>
-        <p className="mb-6 text-sm text-zinc-500">
+        <p className="mb-6 text-sm text-muted-foreground">
           {intro} {t.rich('loginToAccept', { email: preview.email, b: bold })}
         </p>
         <Link
           href={`/login?next=${encodeURIComponent(`/invite/${token}`)}`}
-          className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-zinc-900 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+          className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-primary text-sm font-medium text-primary-foreground hover:bg-primary-hover"
         >
           {t('login')}
         </Link>
@@ -92,7 +92,7 @@ export default async function InvitePage({ params }: PageProps<'/invite/[token]'
 
   return (
     <AuthShell title={t('registerTitle')}>
-      <p className="mb-6 text-sm text-zinc-500">{intro}</p>
+      <p className="mb-6 text-sm text-muted-foreground">{intro}</p>
       <RegisterForm token={token} email={preview.email} spaceId={preview.spaceId} />
     </AuthShell>
   );

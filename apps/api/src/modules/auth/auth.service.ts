@@ -41,15 +41,23 @@ export class AuthService {
         throw AppException.conflict('AUTH_EMAIL_TAKEN');
       }
 
-      // Кожен отримує власний простір, навіть якщо його запросили в чужий.
+      // Запросили в простір — людина живе в ньому, без окремого порожнього особистого.
+      // Реєстраційний інвайт (без простору) — отримує власний простір.
       const user = await tx.user.create({
         data: {
           email: invite.email,
           name,
           passwordHash,
-          memberships: {
-            create: { role: 'OWNER', space: { create: { name: 'Personal', isPersonal: true } } },
-          },
+          ...(invite.spaceId
+            ? {}
+            : {
+                memberships: {
+                  create: {
+                    role: 'OWNER',
+                    space: { create: { name: 'Personal', isPersonal: true } },
+                  },
+                },
+              }),
         },
       });
 

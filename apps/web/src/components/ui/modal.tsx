@@ -4,15 +4,19 @@ import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useId, useRef } from 'react';
 
+import { cn } from '@/lib/cn';
+
 interface Props {
   open: boolean;
   onClose: () => void;
   title: string;
+  description?: string;
+  size?: 'md' | 'lg';
   children: React.ReactNode;
 }
 
 /** Нативний <dialog>: фокус-пастка, Esc і inert-фон — від браузера, без бібліотек. */
-export function Modal({ open, onClose, title, children }: Props) {
+export function Modal({ open, onClose, title, description, size = 'md', children }: Props) {
   const t = useTranslations('common');
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -32,18 +36,24 @@ export function Modal({ open, onClose, title, children }: Props) {
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
-      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl border border-zinc-200 bg-white p-0 text-zinc-900 shadow-xl backdrop:bg-black/50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+      className={cn(
+        'm-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] rounded-3xl border border-border bg-card p-0 text-foreground shadow-2xl backdrop:bg-black/40 backdrop:backdrop-blur-sm',
+        size === 'lg' ? 'max-w-2xl' : 'max-w-md',
+      )}
     >
       <div className="p-6">
         <div className="mb-5 flex items-start justify-between gap-4">
-          <h2 id={titleId} className="text-lg font-semibold">
-            {title}
-          </h2>
+          <div>
+            <h2 id={titleId} className="text-lg font-semibold tracking-tight">
+              {title}
+            </h2>
+            {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
+          </div>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('close')}
-            className="-m-1 rounded-md p-1 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+            className="-m-1.5 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <X className="size-5" aria-hidden />
           </button>

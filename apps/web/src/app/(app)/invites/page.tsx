@@ -1,10 +1,12 @@
 import type { InviteSummary } from '@routine/contracts';
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { getFormatter, getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/card';
 import { serverApi } from '@/lib/api/server';
 import { requireUser, spaceLabel } from '@/lib/session';
+import { canInvite } from '@/lib/space';
 
 import { CreateInviteForm } from './create-invite-form';
 import { InviteList } from './invite-list';
@@ -15,6 +17,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function InvitesPage() {
   const user = await requireUser();
+  // Учасник без власного простору нікого запросити не може — сторінка йому не потрібна.
+  if (!canInvite(user)) redirect('/dashboard');
   const [invites, t, ts, format] = await Promise.all([
     serverApi<InviteSummary[]>('/invites'),
     getTranslations('invites'),
@@ -31,10 +35,10 @@ export default async function InvitesPage() {
     .map((space) => ({ id: space.id, label: spaceLabel(space, ts) }));
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
-        <p className="mt-1 text-sm text-zinc-500">
+        <h1 className="text-3xl font-semibold tracking-tight">{t('title')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           {user.isAdmin ? t('descriptionAdmin') : t('description')}
         </p>
       </div>

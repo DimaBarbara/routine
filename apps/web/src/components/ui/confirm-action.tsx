@@ -28,7 +28,7 @@ export function ConfirmAction({ label, question, onConfirm, size = 'sm' }: Props
 
   return (
     <div role="group" aria-label={question} className="flex flex-wrap items-center gap-2">
-      <span className="text-sm text-zinc-600 dark:text-zinc-400">{question}</span>
+      <span className="text-sm text-muted-foreground">{question}</span>
       <Button
         variant="danger"
         size={size}
